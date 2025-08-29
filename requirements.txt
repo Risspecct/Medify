@@ -1,0 +1,13 @@
+fastapi[standard]
+pandas
+streamlit
+dotenv
+fastapi[standard]
+ibm_watson_machine_learning
+uvicorn
+transformers
+torch
+accelerate
+google-cloud-vision
+requests
+Pillow
