@@ -37,25 +37,43 @@ def _check_age(medicine_info: pd.Series, age_in_months: int, report: Dict[str, A
 
 
 def _check_dosage(medicine_info: pd.Series, given_dose: float, medicine_name: str, report: Dict[str, Any]) -> None:
-    """Check if the given dosage is within the recommended range."""
+    """
+    Checks if the given dosage is valid.
+    - If the dataset provides a range (e.g., "10-15"), it checks if the dose is within that range.
+    - If the dataset provides a single value (e.g., "15"), it treats it as a MAXIMUM dose
+      and checks that the given dose is not higher.
+    """
     dose_range_str = medicine_info['dose_mg_per_kg']
 
     if pd.isna(dose_range_str) or not isinstance(dose_range_str, str):
         report["dosage_check"] = "Not applicable: No mg/kg dosage specified in dataset."
         return
 
-    # Extract numbers from strings like '10-15' or '5'
     values = [float(x) for x in re.findall(r'[\d\.]+', dose_range_str)]
-    min_dose, max_dose = values[0], values[-1]
+    if not values:
+        report["dosage_check"] = f"Warning: Could not parse dosage numbers from '{dose_range_str}'."
+        return
 
-    if not min_dose <= given_dose <= max_dose:
-        report["dosage_check"] = (
-            f"Fail: {given_dose} mg/kg is outside recommended range {dose_range_str} mg/kg."
-        )
+    # --- THIS IS THE NEW, IMPROVED LOGIC ---
+
+    # Case 1: The dataset specifies a range (e.g., "10-15")
+    if len(values) > 1:
+        min_dose = values[0]
+        max_dose = values[-1]
+        if min_dose <= given_dose <= max_dose:
+            report["dosage_check"] = "Pass: Dosage is within the recommended range."
+        else:
+            report["dosage_check"] = f"Fail: Given dose of {given_dose:.2f} mg/kg is outside the recommended range of {dose_range_str} mg/kg."
+        report["notes"].append(f"Recommended dose range for {medicine_name.capitalize()}: {dose_range_str} mg/kg.")
+
+    # Case 2: The dataset specifies a single value (e.g., "15")
     else:
-        report["dosage_check"] = "Pass: Dosage is within the recommended range."
-
-    report["notes"].append(f"Recommended dose range for {medicine_name}: {dose_range_str} mg/kg.")
+        max_dose = values[0]
+        if given_dose <= max_dose:
+            report["dosage_check"] = "Pass: Dosage is at or below the recommended maximum."
+        else:
+            report["dosage_check"] = f"Fail: Given dose of {given_dose:.2f} mg/kg exceeds the maximum recommended dose of {max_dose} mg/kg."
+        report["notes"].append(f"Maximum recommended dose for {medicine_name.capitalize()}: {max_dose} mg/kg.")
 
 
 def get_report(symptom: str, medicine_name: str, age_in_months: int, given_dosage_mg_per_kg: float) -> Dict[str, Any]:
@@ -83,7 +101,7 @@ def get_report(symptom: str, medicine_name: str, age_in_months: int, given_dosag
     }
 
     try:
-        df = pd.read_csv("C:\\Users\\Rishi\\Desktop\\Program related\\Medify\\datasets\\dosage.csv", on_bad_lines="skip")
+        df = pd.read_csv("C:\\Users\\Shresth Agarwal\\Downloads\\Medify\\datasets\\dosage.csv", on_bad_lines="skip")
     except FileNotFoundError:
         report["notes"].append("Error: The 'dosage.csv' file was not found.")
         return report
