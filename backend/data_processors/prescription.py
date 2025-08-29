@@ -1,6 +1,13 @@
 import pandas as pd
 import re
 from typing import Dict, Any
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+
+dosage_file_path = os.getenv("DOSAGE_FILE_PATH", "datasets/dosage.csv")
 
 
 def _check_symptom(df: pd.DataFrame, symptom: str, medicine_name: str, report: Dict[str, Any]) -> None:
@@ -101,7 +108,7 @@ def get_report(symptom: str, medicine_name: str, age_in_months: int, given_dosag
     }
 
     try:
-        df = pd.read_csv("C:\\Users\\Shresth Agarwal\\Downloads\\Medify\\datasets\\dosage.csv", on_bad_lines="skip")
+        df = pd.read_csv(dosage_file_path, on_bad_lines="skip")
     except FileNotFoundError:
         report["notes"].append("Error: The 'dosage.csv' file was not found.")
         return report
@@ -123,7 +130,3 @@ def get_report(symptom: str, medicine_name: str, age_in_months: int, given_dosag
     _check_dosage(medicine_info, given_dosage_mg_per_kg, medicine_name, report)
 
     return report
-
-
-# Example usage:
-print(get_report("Fever", "Paracetamol", 240, 15))

@@ -1,7 +1,13 @@
+from dotenv import load_dotenv
+import os
 import pandas as pd
 
+load_dotenv()
 
-def load_dosage_data(filepath: str = "C:\\Users\\Rishi\\Desktop\\Program related\\Medify\\datasets\\dosage.csv") -> pd.DataFrame | str:
+dosage_file_path = os.getenv("DOSAGE_FILE_PATH", "datasets/dosage.csv")
+
+
+def load_dosage_data(filepath: str = dosage_file_path) -> pd.DataFrame | str:
     """Load dosage dataset, skipping bad rows."""
     try:
         return pd.read_csv(filepath, on_bad_lines="skip")

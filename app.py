@@ -4,15 +4,21 @@ import streamlit as st
 from transformers import pipeline
 import requests
 import re
+import os
 from features import ocr, ner
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # --- API Configuration ---
-API_BASE_URL = "http://127.0.0.1:8000" # IMPORTANT: Update with your friend's deployed FastAPI URL
+API_BASE_URL = os.getenv("FAST_API_URL", "http://http://127.0.0.1:8000")
 
 # --- App UI Configuration ---
 st.set_page_config(layout="wide", page_title="Medify - Medical Prescription Analyzer")
 st.title("⚕️ Medify: Prescription Analysis & Verification")
 st.markdown("An intelligent tool to extract, analyze, and verify medical prescriptions.")
+
 
 # --- Caching and Resource Loading ---
 @st.cache_resource
@@ -20,6 +26,7 @@ def load_ner_model():
     """Loads the Hugging Face NER model and caches it."""
     model = pipeline("ner", model="d4data/biomedical-ner-all", aggregation_strategy="simple")
     return model
+
 
 @st.cache_resource
 def load_gcp_vision_client():
@@ -29,6 +36,7 @@ def load_gcp_vision_client():
     except Exception as e:
         st.error(f"Could not load Google Cloud Vision client. Check secrets.toml. Error: {e}")
         return None
+
 
 # --- Initialize Session State ---
 # This helps us track button clicks and results across reruns
@@ -137,7 +145,7 @@ if st.button("Run Verification", type="primary", use_container_width=True):
             except requests.exceptions.RequestException as e:
                 st.error(f"**API Connection Error:** Could not connect to the verification service. Details: {e}")
             except (AttributeError, ValueError):
-                 st.error(f"**Input Error:** Could not parse a valid number from the dosage string: '{dosage_input}'.")
+                st.error(f"**Input Error:** Could not parse a valid number from the dosage string: '{dosage_input}'.")
 
 # --- NEW: Independent Dosage Recommendation Module with Improved UI ---
 st.divider()
@@ -154,7 +162,7 @@ if dosage_med_input != st.session_state.last_med_checked:
     st.session_state.last_med_checked = dosage_med_input
 
 with rec_col2:
-    st.write("") # Spacer for alignment
+    st.write("")  # Spacer for alignment
     # Disable the button if a result is already shown for the current med
     disable_fetch_button = (st.session_state.dosage_result is not None)
     if st.button("Fetch Dosage Info", use_container_width=True, disabled=disable_fetch_button):
@@ -180,7 +188,7 @@ if st.session_state.dosage_result:
             drug_name = result.get('drug_generic', 'N/A')
             st.markdown(f"#### 💊 Dosage Guidelines for **{drug_name}**")
             st.divider()
-            
+
             d_col1, d_col2 = st.columns(2)
             with d_col1:
                 max_dose = result.get('max_daily_dose', 'N/A')
@@ -189,7 +197,7 @@ if st.session_state.dosage_result:
             with d_col2:
                 interval = result.get('dosing_interval_hours', 'N/A')
                 st.metric(label="⏰ Dosing Interval", value=f"Every {interval} hours")
-            
+
             st.warning(f"**⚠️ Key Safety Notes:** {result.get('notes_key_safety', 'No specific safety notes found.')}")
     else:
         st.warning(f"Could not find dosage information for **'{dosage_med_input}'** in the database.")
