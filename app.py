@@ -12,18 +12,20 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # --- API Configuration ---
-API_BASE_URL = os.getenv("FAST_API_URL") # IMPORTANT: Update with your friend's deployed FastAPI URL
+API_BASE_URL = os.getenv("FAST_API_URL")  # IMPORTANT: Update with your friend's deployed FastAPI URL
 
 # --- App UI Configuration ---
 st.set_page_config(layout="wide", page_title="Medify - Medical Prescription Analyzer")
 st.title("⚕️ Medify: Prescription Analysis & Verification")
 st.markdown("An intelligent tool to extract, analyze, and verify medical prescriptions.")
 
+
 # --- Caching and Resource Loading ---
 @st.cache_resource
 def load_ner_model():
     model = pipeline("ner", model="d4data/biomedical-ner-all", aggregation_strategy="simple")
     return model
+
 
 @st.cache_resource
 def load_gcp_vision_client():
@@ -32,6 +34,7 @@ def load_gcp_vision_client():
     except Exception as e:
         st.error(f"Could not load Google Cloud Vision client. Check secrets.toml. Error: {e}")
         return None
+
 
 # --- Initialize Session State ---
 if 'dosage_result' not in st.session_state:
@@ -143,7 +146,7 @@ if st.button("Run Verification", type="primary", use_container_width=True):
             except requests.exceptions.RequestException as e:
                 st.error(f"**API Connection Error:** Could not connect to the verification service. Details: {e}")
             except (AttributeError, ValueError):
-                 st.error(f"**Input Error:** Could not parse a valid number from the dosage string: '{dosage_input}'.")
+                st.error(f"**Input Error:** Could not parse a valid number from the dosage string: '{dosage_input}'.")
 
 # --- Independent Dosage Recommendation Module ---
 st.divider()
@@ -214,14 +217,14 @@ if st.button("Find Alternatives", use_container_width=True):
 # Display the results card ONLY if there are recommendations to show
 if st.session_state.recommendations:
     recommendations = st.session_state.recommendations
-    
+
     # Check if the result is for the currently displayed medication name
     if st.session_state.last_alt_med_checked == alt_med_input:
         with st.container(border=True):
             st.markdown(f"#### 💡 Alternatives & Remedies for **{alt_med_input.capitalize()}**")
             st.markdown(f"*{recommendations.get('description', '')}*")
             st.divider()
-            
+
             # These columns are now inside the main container and will have enough space
             alt_rec_col1, alt_rec_col2 = st.columns(2)
 
@@ -247,7 +250,7 @@ if st.session_state.recommendations:
                         st.markdown(f"**{use}:** {remedy}")
                 else:
                     st.markdown("No specific home remedies listed.")
-            
+
             st.divider()
             st.warning(f"**⚠️ Important Notes:** {recommendations.get('notes', '')}")
     else:
@@ -257,4 +260,4 @@ if st.session_state.recommendations:
 elif 'recommendations' in st.session_state and st.session_state.recommendations is None and st.session_state.last_alt_med_checked:
     # This displays the "not found" message after a search
     if st.session_state.last_alt_med_checked == alt_med_input:
-      st.info(f"No specific alternatives found for '{alt_med_input}' in our knowledge base.")
+        st.info(f"No specific alternatives found for '{alt_med_input}' in our knowledge base.")
