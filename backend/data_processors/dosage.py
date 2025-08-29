@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def load_dosage_data(filepath: str = "C:\\Users\\Rishi\\Desktop\\Medify\\datasets\\dosage.csv") -> pd.DataFrame | str:
+def load_dosage_data(filepath: str = "C:\\Users\\Rishi\\Desktop\\Program related\\Medify\\datasets\\dosage.csv") -> pd.DataFrame | str:
     """Load dosage dataset, skipping bad rows."""
     try:
         return pd.read_csv(filepath, on_bad_lines="skip")
