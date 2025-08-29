@@ -5,45 +5,43 @@ from transformers import pipeline
 import requests
 import re
 import os
-from features import ocr, ner
+from features import ocr, ner, alternative
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
 
 # --- API Configuration ---
-API_BASE_URL = os.getenv("FAST_API_URL", "http://http://127.0.0.1:8000")
+API_BASE_URL = os.getenv("FAST_API_URL") # IMPORTANT: Update with your friend's deployed FastAPI URL
 
 # --- App UI Configuration ---
 st.set_page_config(layout="wide", page_title="Medify - Medical Prescription Analyzer")
 st.title("⚕️ Medify: Prescription Analysis & Verification")
 st.markdown("An intelligent tool to extract, analyze, and verify medical prescriptions.")
 
-
 # --- Caching and Resource Loading ---
 @st.cache_resource
 def load_ner_model():
-    """Loads the Hugging Face NER model and caches it."""
     model = pipeline("ner", model="d4data/biomedical-ner-all", aggregation_strategy="simple")
     return model
 
-
 @st.cache_resource
 def load_gcp_vision_client():
-    """Loads the Google Cloud Vision client and caches it."""
     try:
         return ocr.get_gcp_vision_client(st.secrets["gcp_service_account"])
     except Exception as e:
         st.error(f"Could not load Google Cloud Vision client. Check secrets.toml. Error: {e}")
         return None
 
-
 # --- Initialize Session State ---
-# This helps us track button clicks and results across reruns
 if 'dosage_result' not in st.session_state:
     st.session_state.dosage_result = None
 if 'last_med_checked' not in st.session_state:
     st.session_state.last_med_checked = ""
+if 'recommendations' not in st.session_state:
+    st.session_state.recommendations = None
+if 'last_alt_med_checked' not in st.session_state:
+    st.session_state.last_alt_med_checked = ""
 
 
 # --- Load Models and Clients into memory ---
@@ -145,25 +143,21 @@ if st.button("Run Verification", type="primary", use_container_width=True):
             except requests.exceptions.RequestException as e:
                 st.error(f"**API Connection Error:** Could not connect to the verification service. Details: {e}")
             except (AttributeError, ValueError):
-                st.error(f"**Input Error:** Could not parse a valid number from the dosage string: '{dosage_input}'.")
+                 st.error(f"**Input Error:** Could not parse a valid number from the dosage string: '{dosage_input}'.")
 
-# --- NEW: Independent Dosage Recommendation Module with Improved UI ---
+# --- Independent Dosage Recommendation Module ---
 st.divider()
 st.header("3. Fetch Dosage Guidelines")
+# ... (Dosage recommendation module is unchanged) ...
 st.markdown("Get standard dosage information for a specific medication and age from the backend service.")
 rec_col1, rec_col2 = st.columns([0.8, 0.2])
-
 with rec_col1:
-    dosage_med_input = st.text_input("Medication Name", value=med_input, key="dosage_med_input",
-                                     help="Enter a medication name to get its standard dosage guidelines.")
-# If user types a new med name, clear the old result
+    dosage_med_input = st.text_input("Medication Name", value=med_input, key="dosage_med_input", help="Enter a medication name to get its standard dosage guidelines.")
 if dosage_med_input != st.session_state.last_med_checked:
     st.session_state.dosage_result = None
     st.session_state.last_med_checked = dosage_med_input
-
 with rec_col2:
-    st.write("")  # Spacer for alignment
-    # Disable the button if a result is already shown for the current med
+    st.write("")
     disable_fetch_button = (st.session_state.dosage_result is not None)
     if st.button("Fetch Dosage Info", use_container_width=True, disabled=disable_fetch_button):
         if not dosage_med_input:
@@ -178,17 +172,13 @@ with rec_col2:
                 except requests.exceptions.RequestException as e:
                     st.error(f"API Connection Error: {e}")
                     st.session_state.dosage_result = None
-
-# Display the dosage recommendation results in the new, improved UI
 if st.session_state.dosage_result:
     result = st.session_state.dosage_result
-    # Check if the API returned a valid drug name, otherwise it's a "not found" case
     if result and result.get("drug_generic"):
         with st.container(border=True):
             drug_name = result.get('drug_generic', 'N/A')
             st.markdown(f"#### 💊 Dosage Guidelines for **{drug_name}**")
             st.divider()
-
             d_col1, d_col2 = st.columns(2)
             with d_col1:
                 max_dose = result.get('max_daily_dose', 'N/A')
@@ -197,7 +187,74 @@ if st.session_state.dosage_result:
             with d_col2:
                 interval = result.get('dosing_interval_hours', 'N/A')
                 st.metric(label="⏰ Dosing Interval", value=f"Every {interval} hours")
-
             st.warning(f"**⚠️ Key Safety Notes:** {result.get('notes_key_safety', 'No specific safety notes found.')}")
     else:
         st.warning(f"Could not find dosage information for **'{dosage_med_input}'** in the database.")
+
+# --- NEW: Independent Alternative Recommendations Module with Corrected UI Layout ---
+st.divider()
+st.header("4. Find Alternative Medications & Remedies")
+st.markdown("Get suggestions for alternative medications and home remedies for a given drug.")
+
+# --- THIS IS THE CORRECTED LAYOUT ---
+# The input field and button are now in the main container, not columns.
+alt_med_input = st.text_input("Medication Name", value=med_input, key="alt_med_input",
+                              help="Enter a medication to find potential alternatives.")
+
+if st.button("Find Alternatives", use_container_width=True):
+    # Clear previous results when a new search is made
+    st.session_state.recommendations = None
+    if not alt_med_input:
+        st.error("Please enter a medication name to get recommendations.")
+    else:
+        # We store the result in session state to persist it across reruns
+        st.session_state.recommendations = alternative.find_alternatives(alt_med_input)
+        st.session_state.last_alt_med_checked = alt_med_input
+
+# Display the results card ONLY if there are recommendations to show
+if st.session_state.recommendations:
+    recommendations = st.session_state.recommendations
+    
+    # Check if the result is for the currently displayed medication name
+    if st.session_state.last_alt_med_checked == alt_med_input:
+        with st.container(border=True):
+            st.markdown(f"#### 💡 Alternatives & Remedies for **{alt_med_input.capitalize()}**")
+            st.markdown(f"*{recommendations.get('description', '')}*")
+            st.divider()
+            
+            # These columns are now inside the main container and will have enough space
+            alt_rec_col1, alt_rec_col2 = st.columns(2)
+
+            with alt_rec_col1:
+                st.subheader("💊 Medication Alternatives")
+                alts = recommendations.get('alternatives', [])
+                if alts:
+                    for alt in alts:
+                        if '(' in alt:
+                            name, desc = alt.split('(', 1)
+                            st.markdown(f"**{name.strip()}**")
+                            st.caption(f"({desc.strip()}")
+                        else:
+                            st.markdown(f"**{alt.strip()}**")
+                else:
+                    st.markdown("No specific medication alternatives listed.")
+
+            with alt_rec_col2:
+                st.subheader("🌿 Home Remedies")
+                remedies = recommendations.get('home_remedies_for_common_uses', {})
+                if remedies:
+                    for use, remedy in remedies.items():
+                        st.markdown(f"**{use}:** {remedy}")
+                else:
+                    st.markdown("No specific home remedies listed.")
+            
+            st.divider()
+            st.warning(f"**⚠️ Important Notes:** {recommendations.get('notes', '')}")
+    else:
+        # This handles the case where the user types a new med name but hasn't clicked the button yet
+        st.session_state.recommendations = None
+
+elif 'recommendations' in st.session_state and st.session_state.recommendations is None and st.session_state.last_alt_med_checked:
+    # This displays the "not found" message after a search
+    if st.session_state.last_alt_med_checked == alt_med_input:
+      st.info(f"No specific alternatives found for '{alt_med_input}' in our knowledge base.")
