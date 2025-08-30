@@ -16,11 +16,15 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
 * **Biomedical Named Entity Recognition (NER)** with HuggingFace Transformers
 
   * Identifies **medications, dosages, and symptoms** from free-text prescriptions.
+   <img width="1832" height="717" alt="image" src="https://github.com/user-attachments/assets/af707e07-3861-4474-bae8-ba2346945f48" />
+
 
 ### 🧪 Drug Interaction Analysis
 
 * AI-powered backend using **IBM Watson Granite Models**.
 * Detects potential **drug–drug interactions** with structured risk levels (🔴 High, 🟡 Moderate, 🟢 Low).
+  <img width="1856" height="889" alt="Screenshot 2025-08-30 132157" src="https://github.com/user-attachments/assets/07594fa2-7c80-4a7d-9e68-30cea82bf534" />
+
 
 ### ✅ Prescription Verification
 
@@ -30,16 +34,23 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
   * **Symptom appropriateness**
   * **Age safety**
   * **Dosage safety (mg/kg)**
+ <img width="1853" height="655" alt="Screenshot 2025-08-30 132328" src="https://github.com/user-attachments/assets/e5975448-43ab-4b9e-ade0-689b11e23a3a" />
+ <img width="1853" height="659" alt="Screenshot 2025-08-30 132440" src="https://github.com/user-attachments/assets/d9796378-9669-4957-876b-0b492c602b8c" />
+
 
 ### 📊 Dosage Guidelines
 
 * Fetches standardized dosage ranges, intervals, and safety notes from dataset.
 * Personalized to **patient’s age and weight**.
+<img width="1827" height="706" alt="Screenshot 2025-08-30 132510" src="https://github.com/user-attachments/assets/6947fea7-e958-4cda-82b2-8d97b334793c" />
+
 
 ### 🌿 Alternatives & Remedies
 
 * Suggests **alternative medications**.
 * Provides **home remedies** for common conditions from an internal knowledge base.
+<img width="1839" height="923" alt="Screenshot 2025-08-30 132546" src="https://github.com/user-attachments/assets/3af8847b-9815-428e-9ab1-db80602371b8" />
+
 
 ### 🤖 AI-Powered Summary
 
@@ -49,6 +60,7 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
   * Dosage guidelines
   * Alternative remedies
 * Uses **Watson AI summarization** for clear, simple medical summaries.
+<img width="1791" height="790" alt="Screenshot 2025-08-30 132625" src="https://github.com/user-attachments/assets/f7d1b27a-2d80-4eb9-8503-69e8bf4d931a" />
 
 ---
 
