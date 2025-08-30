@@ -11,6 +11,8 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
 * **OCR with Google Cloud Vision API**
 
   * Extracts text from uploaded or captured prescription images.
+  * <img width="1855" height="916" alt="Screenshot 2025-08-30 132053" src="https://github.com/user-attachments/assets/37e064de-6b1d-4141-920c-74aa1d40c327" />
+
 * **Biomedical Named Entity Recognition (NER)** with HuggingFace Transformers
 
   * Identifies **medications, dosages, and symptoms** from free-text prescriptions.
