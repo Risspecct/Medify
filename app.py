@@ -3,6 +3,7 @@
 import streamlit as st
 from transformers import pipeline
 import requests
+import json
 import re
 import os
 # Import all your feature modules
@@ -39,9 +40,16 @@ def load_ner_model():
 @st.cache_resource
 def load_gcp_vision_client():
     try:
-        return ocr.get_gcp_vision_client(st.secrets["gcp_service_account"])
+        # Check for Render environment variable first
+        gcp_json_str = os.getenv("GCP_SERVICE_ACCOUNT_JSON")
+        if gcp_json_str:
+            credentials_info = json.loads(gcp_json_str)
+        # Fallback to local secrets.toml for local development
+        else:
+            credentials_info = st.secrets["gcp_service_account"]
+        return ocr.get_gcp_vision_client(credentials_info)
     except Exception as e:
-        st.error(f"Could not load Google Cloud Vision client. Check secrets.toml. Error: {e}")
+        st.error(f"Could not load Google Cloud Vision client. Check secrets/environment variables. Error: {e}")
         return None
 
 # --- Load Models and Clients into memory ---
