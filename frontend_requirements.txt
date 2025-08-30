@@ -1,9 +1,5 @@
-fastapi[standard]
-pandas
 streamlit
-dotenv
-ibm_watson_machine_learning
-uvicorn
+python-dotenv
 transformers
 torch
 accelerate
