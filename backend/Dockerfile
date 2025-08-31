@@ -21,4 +21,4 @@ ENV DOSAGE_FILE_PATH=/code/datasets/dosage.csv
 EXPOSE 8000
 
 # Use Gunicorn Uvicorn for production
-CMD ["uvicorn", "-k", "uvicorn.workers.UvicornWorker", "backend.main:app", "--bind", "0.0.0.0:8000"]
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
