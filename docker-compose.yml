@@ -11,7 +11,7 @@ services:
     environment:
       - DOSAGE_FILE_PATH=/code/datasets/dosage.csv
       - WATSON_API_KEY=${WATSON_API_KEY}
-      - WATSON_REGION_URL=${WATSON_URL}
+      - WATSON_REGION_URL=${WATSON_REGION_URL}
       - WATSON_PROJECT_ID=${WATSON_PROJECT_ID}
     working_dir: /code/backend
     command: uvicorn main:app --host 0.0.0.0 --port 8000
