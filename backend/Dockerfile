@@ -1,24 +1,27 @@
 FROM python:3.11-slim
 
-WORKDIR /code
+# Set the working directory to /app
+WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential gcc curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install backend dependencies
+# Copy requirements first to leverage Docker cache
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend source + only dosage.csv
-COPY backend ./backend
+# Copy the backend source code into the /app directory
+COPY backend/ .
+
+# Copy the datasets into the /app directory
 COPY datasets ./datasets
 
-# Set env var so code always knows where to look
-ENV DOSAGE_FILE_PATH=/code/datasets/dosage.csv
+# Set the absolute path for the dosage file inside the container
+ENV DOSAGE_FILE_PATH=/app/datasets/dosage.csv
 
 EXPOSE 8000
 
-# Use Gunicorn Uvicorn for production
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# The command now runs from /app, so it can find main.py directly
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
