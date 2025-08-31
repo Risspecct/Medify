@@ -6,3 +6,4 @@ accelerate
 google-cloud-vision
 requests
 Pillow
+sentencepiece
