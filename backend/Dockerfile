@@ -1,19 +1,27 @@
-# backend.Dockerfile
 FROM python:3.11-slim
 
-WORKDIR /code
+# Set the working directory to /app
+WORKDIR /app
 
-# Install system deps (only if needed for Pandas/Watson ML etc.)
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential gcc curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install backend dependencies (cached layer)
-COPY backend_requirements.txt requirements.txt
+# Copy requirements first to leverage Docker cache
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy only backend source
-COPY backend ./backend
-COPY datasets/dosage.csv ./datasets/dosage.csv
+# Copy the backend source code into the /app directory
+COPY backend/ .
 
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Copy the datasets into the /app directory
+COPY datasets ./datasets
+
+# Set the absolute path for the dosage file inside the container
+ENV DOSAGE_FILE_PATH=/app/datasets/dosage.csv
+
+EXPOSE 8000
+
+# The command now runs from /app, so it can find main.py directly
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

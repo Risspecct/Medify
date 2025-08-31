@@ -1,0 +1,25 @@
+# render.yaml
+services:
+  # Backend Service (FastAPI)
+  - type: web
+    name: medify-backend
+    env: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    # The 'envVars' key is a list that can contain secrets from groups.
+    envVars:
+      - fromGroup: medify-secrets
+        
+  # Frontend Service (Streamlit)
+  - type: web
+    name: medify-frontend
+    env: docker
+    plan: free
+    dockerfilePath: ./frontend/Dockerfile
+    envVars:
+      # You can define regular environment variables...
+      - key: FAST_API_URL
+        value: http://medify-backend:8000
+      # ...and also pull in secrets from an environment group.
+      - fromGroup: medify-secrets
+

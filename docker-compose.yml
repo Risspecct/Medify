@@ -1,29 +1,32 @@
-version: "3.9"
-
 services:
   backend:
     build:
       context: .
-      dockerfile: backend.Dockerfile
+      dockerfile: backend/Dockerfile
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/code/backend:cached
-      - ./datasets:/code/datasets:cached
+      - ./datasets/dosage.csv:/code/datasets/dosage.csv:cached
     environment:
-      - DOSAGE_FILE_PATH=datasets/dosage.csv
+      - DOSAGE_FILE_PATH=/code/datasets/dosage.csv
+      - WATSON_API_KEY=${WATSON_API_KEY}
+      - WATSON_REGION_URL=${WATSON_REGION_URL}
+      - WATSON_PROJECT_ID=${WATSON_PROJECT_ID}
+    working_dir: /code/backend
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
 
   frontend:
     build:
       context: .
-      dockerfile: frontend.Dockerfile
+      dockerfile: frontend/Dockerfile
     ports:
       - "8501:8501"
     volumes:
-      - ./app.py:/app/app.py:cached
-      - ./features:/app/features:cached
+      - ./frontend:/app/frontend:cached
       - ./datasets:/app/datasets:cached
     environment:
       - FAST_API_URL=http://backend:8000
+      - GCP_SERVICE_ACCOUNT_JSON=${GCP_SERVICE_ACCOUNT_JSON}
     depends_on:
       - backend
