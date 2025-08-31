@@ -84,17 +84,41 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
 
 ```
 medify/
-│── app.py                   # Streamlit frontend
-│── requirements.txt          # Dependencies
-│── .env.example              # Environment variables template
+├── README.md
+├── docker-compose.yml
+├── render.yaml
+├── .env.example
 │
-├── backend/
-│   ├── main.py               # FastAPI entrypoint
-│   ├── routers/              # API endpoints
-│   ├── data_processors/      # Dosage & prescription validation
-│   ├── watson_ai/            # Watson AI integration
+├── backend/                # FastAPI backend
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── main.py             # Entry point for backend
+│   ├── data_processors/    # Data preprocessing utilities
+│   │   ├── dosage.py
+│   │   └── prescription.py
+│   ├── routers/            # API routes
+│   │   ├── ai_router.py
+│   │   └── drug_info.py
+│   └── watson_ai/          # IBM Watson AI integration
+│       ├── ai_config.py
+│       ├── interactions.py
+│       └── summarizer.py
 │
-├── datasets/                 # Dosage + alternative medicine datasets
+├── datasets/               # Project datasets
+│   ├── alt_dataset.py
+│   ├── dosage.csv
+│   └── ner_dataset.py
+│
+└── frontend/               # Streamlit/Frontend app
+    ├── Dockerfile
+    ├── requirements.txt
+    ├── app.py              # Entry point for frontend
+    └── features/           # Core frontend features
+        ├── ai_services.py
+        ├── alternative.py
+        ├── ner.py
+        ├── ocr.py
+        └── verification_client.py
 ```
 
 ---
