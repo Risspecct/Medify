@@ -1,26 +1,23 @@
 # render.yaml
-# This file configures Medify application for deployment on Render.
-
 services:
   # Backend Service (FastAPI)
   - type: web
     name: medify-backend
     env: docker
     dockerfilePath: ./backend/Dockerfile
-    # Secrets are pulled from the 'medify-secrets' environment group.
-    envVarGroups:
-      - name: medify-secrets
+    # The 'envVars' key is a list that can contain secrets from groups.
+    envVars:
+      - fromGroup: medify-secrets
         
   # Frontend Service (Streamlit)
-  # This service is public and connects to the backend internally.
   - type: web
     name: medify-frontend
     env: docker
     dockerfilePath: ./frontend/Dockerfile
     envVars:
-      # This line automatically connects the frontend to the backend service.
+      # You can define regular environment variables...
       - key: FAST_API_URL
         value: http://medify-backend:8000
-    # Secrets are also pulled from the 'medify-secrets' environment group.
-    envVarGroups:
-      - name: medify-secrets
+      # ...and also pull in secrets from an environment group.
+      - fromGroup: medify-secrets
+
