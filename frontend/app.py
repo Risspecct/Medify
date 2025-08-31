@@ -1,11 +1,16 @@
 # app.py
 
+import sys
+import os
 import streamlit as st
 from transformers import pipeline
-import requests
 import json
 import re
-import os
+
+# PASTE THE CODE BLOCK HERE
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, project_root)
+
 # Import all your feature modules
 from features import ocr, ner, alternative, ai_services, verification_client
 from dotenv import load_dotenv
@@ -32,10 +37,12 @@ if 'dosage_result' not in st.session_state:
 if 'recommendations' not in st.session_state:
     st.session_state.recommendations = None
 
+
 # --- Caching and Resource Loading ---
 @st.cache_resource
 def load_ner_model():
     return pipeline("ner", model="d4data/biomedical-ner-all", aggregation_strategy="simple")
+
 
 @st.cache_resource
 def load_gcp_vision_client():
@@ -52,13 +59,16 @@ def load_gcp_vision_client():
         st.error(f"Could not load Google Cloud Vision client. Check secrets/environment variables. Error: {e}")
         return None
 
+
 # --- Load Models and Clients into memory ---
 with st.sidebar:
     st.header("System Status")
     ner_pipeline = load_ner_model()
     vision_client = load_gcp_vision_client()
-    if ner_pipeline and vision_client: st.success("Services Ready!")
-    else: st.error("A service failed to load.")
+    if ner_pipeline and vision_client:
+        st.success("Services Ready!")
+    else:
+        st.error("A service failed to load.")
 
 # --- Patient Profile Input in Sidebar ---
 st.sidebar.divider()
@@ -94,8 +104,10 @@ with col2:
             st.session_state.analysis_results['ner_results'] = ner_data
             for key, value in ner_data.items():
                 st.markdown(f"**{key.capitalize()}:**")
-                if value: st.markdown(f"> `{' | '.join(value)}`")
-                else: st.markdown("> *N/A*")
+                if value:
+                    st.markdown(f"> `{' | '.join(value)}`")
+                else:
+                    st.markdown("> *N/A*")
     else:
         st.info("Results of automated extraction will appear here.")
 

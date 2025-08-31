@@ -3,6 +3,7 @@
 from datasets.alt_dataset import get_dataset_alt
 ALTERNATIVE_KNOWLEDGE_BASE = get_dataset_alt()
 
+
 def find_alternatives(medication_name: str) -> dict | None:
     """
     Looks up a medication in the knowledge base and returns alternatives.

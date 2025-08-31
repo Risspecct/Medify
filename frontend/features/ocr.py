@@ -3,6 +3,7 @@
 from google.cloud import vision
 import google.auth
 
+
 def get_gcp_vision_client(credentials_info: dict):
     """
     Initializes the Google Cloud Vision client from credentials info.
@@ -14,6 +15,7 @@ def get_gcp_vision_client(credentials_info: dict):
     except Exception as e:
         # Let the caller handle the error display
         raise ConnectionError(f"Failed to create Google Cloud Vision client: {e}")
+
 
 def extract_text_from_bytes(client, image_bytes: bytes) -> str:
     """

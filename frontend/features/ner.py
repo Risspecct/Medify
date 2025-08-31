@@ -1,7 +1,7 @@
 # features/ner.py
-
 import re
 from datasets.ner_dataset import get_dataset
+
 medications, symptoms, dosage_units, frequencies = get_dataset()
 
 
@@ -44,8 +44,8 @@ def extract_medical_entities(text: str, ner_pipeline_func) -> dict:
 
     # Step 4: Find and Consume Symptoms from what is left
     for sym in sorted(symptoms, key=len, reverse=True):
-         match = re.search(r'\b' + re.escape(sym) + r'\b', remaining_text)
-         if match:
+        match = re.search(r'\b' + re.escape(sym) + r'\b', remaining_text)
+        if match:
             cleaned_entities["Symptoms"].append(sym)
             remaining_text = remaining_text.replace(match.group(0), "", 1)
 
@@ -56,7 +56,7 @@ def extract_medical_entities(text: str, ner_pipeline_func) -> dict:
             word = entity['word'].lower().strip()
             if entity['entity_group'] in ["Drug", "Medicine"]:
                 if len(word) > 3 and word not in ["medication", "prescription"]:
-                     cleaned_entities["Medication"].append(word)
+                    cleaned_entities["Medication"].append(word)
 
     # Final Cleanup - MUST RETURN the data
     for key in cleaned_entities:

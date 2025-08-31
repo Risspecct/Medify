@@ -1,17 +1,15 @@
-# docker-compose.yml
-version: '3.8'
+version: "3.9"
 
 services:
   backend:
     build:
       context: .
       dockerfile: backend.Dockerfile
-    command: uvicorn backend.main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/code/backend
-      - ./datasets:/code/datasets
+      - ./backend:/code/backend:cached
+      - ./datasets:/code/datasets:cached
     environment:
       - DOSAGE_FILE_PATH=datasets/dosage.csv
 
@@ -19,13 +17,13 @@ services:
     build:
       context: .
       dockerfile: frontend.Dockerfile
-    command: streamlit run app.py --server.port=8501 --server.address=0.0.0.0
     ports:
       - "8501:8501"
     volumes:
-      - .:/app
+      - ./app.py:/app/app.py:cached
+      - ./features:/app/features:cached
+      - ./datasets:/app/datasets:cached
     environment:
-      # Use the service name 'backend' to communicate within the Docker network
       - FAST_API_URL=http://backend:8000
     depends_on:
       - backend
