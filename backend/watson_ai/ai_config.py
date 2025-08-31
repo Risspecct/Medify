@@ -7,7 +7,7 @@ load_dotenv()
 
 # Correct keys
 my_credentials = {
-    "url": os.getenv("WATSON_URL", "https://us-south.ml.cloud.ibm.com"),
+    "url": os.getenv("WATSON_REGION_URL", "https://us-south.ml.cloud.ibm.com"),
     "apikey": os.getenv("WATSON_API_KEY", "your_api_key_here"),
 }
 project_id = os.getenv("WATSON_PROJECT_ID", "your_project_id_here")
