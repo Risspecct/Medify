@@ -11,7 +11,7 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
 * **OCR with Google Cloud Vision API**
 
   * Extracts text from uploaded or captured prescription images.
-  * <img width="1855" height="916" alt="Screenshot 2025-08-30 132053" src="https://github.com/user-attachments/assets/37e064de-6b1d-4141-920c-74aa1d40c327" />
+  <img width="1855" height="916" alt="Screenshot 2025-08-30 132053" src="https://github.com/user-attachments/assets/37e064de-6b1d-4141-920c-74aa1d40c327" />
 
 * **Biomedical Named Entity Recognition (NER)** with HuggingFace Transformers
 
@@ -35,7 +35,8 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
   * **Age safety**
   * **Dosage safety (mg/kg)**
  <img width="1853" height="655" alt="Screenshot 2025-08-30 132328" src="https://github.com/user-attachments/assets/e5975448-43ab-4b9e-ade0-689b11e23a3a" />
- <img width="1853" height="659" alt="Screenshot 2025-08-30 132440" src="https://github.com/user-attachments/assets/d9796378-9669-4957-876b-0b492c602b8c" />
+ <img width="1916" height="760" alt="image" src="https://github.com/user-attachments/assets/bfaa6ed0-9e66-4063-8c96-927411fdd050" />
+
 
 
 ### 📊 Dosage Guidelines
