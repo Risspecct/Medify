@@ -128,7 +128,7 @@ medify/
 ### 1️⃣ Clone Repo
 
 ```bash
-git clone https://github.com/your-username/medify.git
+git clone https://github.com/Risspecct/Medify.git
 cd medify
 ```
 
@@ -170,7 +170,7 @@ API will be available at: `http://127.0.0.1:8000/docs`
 ### 6️⃣ Run Frontend
 
 ```bash
-streamlit run app.py
+streamlit run frontend/app.py
 ```
 
 ---
