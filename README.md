@@ -21,7 +21,7 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
 
 ### 🧪 Drug Interaction Analysis
 
-* AI-powered backend using **IBM Watson Granite Models**.
+* AI-powered backend using **Google Gemini (Generative AI)**.
 * Detects potential **drug–drug interactions** with structured risk levels (🔴 High, 🟡 Moderate, 🟢 Low).
   <img width="1856" height="889" alt="Screenshot 2025-08-30 132157" src="https://github.com/user-attachments/assets/07594fa2-7c80-4a7d-9e68-30cea82bf534" />
 
@@ -60,7 +60,7 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
   * Verification results
   * Dosage guidelines
   * Alternative remedies
-* Uses **Watson AI summarization** for clear, simple medical summaries.
+* Uses **Google Gemini summarization** for clear, simple medical summaries.
 <img width="1791" height="790" alt="Screenshot 2025-08-30 132625" src="https://github.com/user-attachments/assets/f7d1b27a-2d80-4eb9-8503-69e8bf4d931a" />
 
 ---
@@ -69,7 +69,7 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
 
 * **Frontend:** [Streamlit](https://streamlit.io/)
 * **Backend:** [FastAPI](https://fastapi.tiangolo.com/)
-* **AI Models:** HuggingFace Transformers (`d4data/biomedical-ner-all`), IBM Granite (Watson ML)
+* **AI Models:** HuggingFace Transformers (`d4data/biomedical-ner-all`), Google Gemini (Generative AI)
 * **OCR:** Google Cloud Vision API
 * **Dataset:** `dosage.csv` + curated alternative medicines dataset
 * **Other Libraries:**
@@ -89,6 +89,7 @@ medify/
 ├── render.yaml
 ├── .env.example
 │
+<<<<<<< Updated upstream
 ├── backend/                # FastAPI backend
 │   ├── Dockerfile
 │   ├── requirements.txt
@@ -103,6 +104,13 @@ medify/
 │       ├── ai_config.py
 │       ├── interactions.py
 │       └── summarizer.py
+=======
+├── backend/
+│   ├── main.py               # FastAPI entrypoint
+│   ├── routers/              # API endpoints
+│   ├── data_processors/      # Dosage & prescription validation
+│   ├── watson_ai/            # Gemini AI integration (Gemini client lives here)
+>>>>>>> Stashed changes
 │
 ├── datasets/               # Project datasets
 │   ├── alt_dataset.py
@@ -151,9 +159,8 @@ pip install -r requirements.txt
 Copy `.env.example` → `.env` and set:
 
 ```ini
-WATSON_API_KEY=your_api_key
-WATSON_PROJECT_ID=your_project_id
-WATSON_REGION_URL=your_region_url
+GENAI_API_KEY=your_genai_api_key
+GEMINI_MODEL_ID=models/gemini-1.5
 FAST_API_URL=http://127.0.0.1:8000
 DOSAGE_FILE_PATH=datasets/dosage.csv
 ```
