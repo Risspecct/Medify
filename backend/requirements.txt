@@ -1,5 +1,5 @@
 fastapi[standard]
 pandas
 python-dotenv
-ibm_watson_machine_learning
+google-generativeai
 uvicorn
