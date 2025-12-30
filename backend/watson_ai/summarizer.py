@@ -1,7 +1,10 @@
 from typing import Any
 from pydantic import BaseModel
 from watson_ai import ai_config
+from fastapi import HTTPException
+import logging
 
+logger = logging.getLogger(__name__)
 
 class SummaryRequest(BaseModel):
     outputs: list[dict[str, Any]]
@@ -36,10 +39,15 @@ def refine_input(request) -> str:
     return "\n\n".join(texts)
 
 
+
 def summarize_text(request: SummaryRequest):
     """
-    Summarize the input text using the Granite model.
+    Summarize the input text using the Gemini model.
     """
     prompt = text + refine_input(request)
-    response = ai_config.granite_model.generate_text(prompt)
-    return response
+    try:
+        response = ai_config.gemini_model.generate_text(prompt)
+        return response
+    except Exception as e:
+        logger.exception("AI service error in summarize_text")
+        raise HTTPException(status_code=502, detail="AI service error; check server logs for details.")
