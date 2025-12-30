@@ -11,7 +11,7 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
 * **OCR with Google Cloud Vision API**
 
   * Extracts text from uploaded or captured prescription images.
-  * <img width="1855" height="916" alt="Screenshot 2025-08-30 132053" src="https://github.com/user-attachments/assets/37e064de-6b1d-4141-920c-74aa1d40c327" />
+  <img width="1855" height="916" alt="Screenshot 2025-08-30 132053" src="https://github.com/user-attachments/assets/37e064de-6b1d-4141-920c-74aa1d40c327" />
 
 * **Biomedical Named Entity Recognition (NER)** with HuggingFace Transformers
 
@@ -35,7 +35,8 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
   * **Age safety**
   * **Dosage safety (mg/kg)**
  <img width="1853" height="655" alt="Screenshot 2025-08-30 132328" src="https://github.com/user-attachments/assets/e5975448-43ab-4b9e-ade0-689b11e23a3a" />
- <img width="1853" height="659" alt="Screenshot 2025-08-30 132440" src="https://github.com/user-attachments/assets/d9796378-9669-4957-876b-0b492c602b8c" />
+ <img width="1916" height="760" alt="image" src="https://github.com/user-attachments/assets/bfaa6ed0-9e66-4063-8c96-927411fdd050" />
+
 
 
 ### 📊 Dosage Guidelines
@@ -83,17 +84,41 @@ An intelligent healthcare assistant that extracts, analyzes, verifies, and summa
 
 ```
 medify/
-│── app.py                   # Streamlit frontend
-│── requirements.txt          # Dependencies
-│── .env.example              # Environment variables template
+├── README.md
+├── docker-compose.yml
+├── render.yaml
+├── .env.example
 │
-├── backend/
-│   ├── main.py               # FastAPI entrypoint
-│   ├── routers/              # API endpoints
-│   ├── data_processors/      # Dosage & prescription validation
-│   ├── watson_ai/            # Watson AI integration
+├── backend/                # FastAPI backend
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── main.py             # Entry point for backend
+│   ├── data_processors/    # Data preprocessing utilities
+│   │   ├── dosage.py
+│   │   └── prescription.py
+│   ├── routers/            # API routes
+│   │   ├── ai_router.py
+│   │   └── drug_info.py
+│   └── watson_ai/          # IBM Watson AI integration
+│       ├── ai_config.py
+│       ├── interactions.py
+│       └── summarizer.py
 │
-├── datasets/                 # Dosage + alternative medicine datasets
+├── datasets/               # Project datasets
+│   ├── alt_dataset.py
+│   ├── dosage.csv
+│   └── ner_dataset.py
+│
+└── frontend/               # Streamlit/Frontend app
+    ├── Dockerfile
+    ├── requirements.txt
+    ├── app.py              # Entry point for frontend
+    └── features/           # Core frontend features
+        ├── ai_services.py
+        ├── alternative.py
+        ├── ner.py
+        ├── ocr.py
+        └── verification_client.py
 ```
 
 ---
@@ -103,7 +128,7 @@ medify/
 ### 1️⃣ Clone Repo
 
 ```bash
-git clone https://github.com/your-username/medify.git
+git clone https://github.com/Risspecct/Medify.git
 cd medify
 ```
 
@@ -145,7 +170,7 @@ API will be available at: `http://127.0.0.1:8000/docs`
 ### 6️⃣ Run Frontend
 
 ```bash
-streamlit run app.py
+streamlit run frontend/app.py
 ```
 
 ---
