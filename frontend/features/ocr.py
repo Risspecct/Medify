@@ -9,7 +9,7 @@ def get_gcp_vision_client(credentials_info: dict):
     Initializes the Google Cloud Vision client from credentials info.
     """
     try:
-        credentials = google.oauth2.service_account.Credentials.from_service_account_info(credentials_info)
+        credentials = google.oauth2.service_account.Credentials.from_service_account_info(credentials_info)  # type: ignore
         client = vision.ImageAnnotatorClient(credentials=credentials)
         return client
     except Exception as e:
