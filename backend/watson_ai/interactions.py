@@ -1,15 +1,17 @@
 from pydantic import BaseModel
 from typing import Any, List
 from watson_ai import ai_config
+from fastapi import HTTPException
+import logging
 
+logger = logging.getLogger(__name__)
 
 class InteractionRequest(BaseModel):
     medicines: List[str]
 
-
 def get_interaction_results(request: InteractionRequest) -> Any:
     """
-    Get drug interaction results using the Granite model.
+    Get drug interaction results using the Gemini model.
     """
     prompt = f"""
     Role: You are a medical information AI. Your primary goal is to provide clear, structured, and easy-to-understand information about potential drug-drug interactions.
@@ -28,4 +30,9 @@ def get_interaction_results(request: InteractionRequest) -> Any:
     Actionable Recommendation: After the explanation, provide a clear and direct recommendation (e.g., "Consult your doctor before combining," or "This combination should be avoided.").
     Final Disclaimer: After evaluating all pairs, conclude the entire response with the mandatory disclaimer.{request.medicines}
     """
-    return ai_config.granite_model.generate_text(prompt)
+    try:
+        return ai_config.gemini_model.generate_text(prompt)
+    except Exception as e:
+        # Log full traceback server-side for diagnostics, but return a generic message to clients
+        logger.exception("AI service error in get_interaction_results")
+        raise HTTPException(status_code=502, detail="AI service error; check server logs for details.")

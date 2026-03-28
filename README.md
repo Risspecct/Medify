@@ -24,13 +24,10 @@ Extracts text from prescription images using **Google Cloud Vision API** and ide
 
 ### 🧪 AI-Powered Drug Interaction Analysis
 
-Utilizes **IBM Watson Granite Models** to detect potential drug-drug interactions between prescribed medications. Interactions are categorized with clear risk levels:
+* AI-powered backend using **Google Gemini (Generative AI)**.
+* Detects potential **drug–drug interactions** with structured risk levels (🔴 High, 🟡 Moderate, 🟢 Low).
+  <img width="1856" height="889" alt="Screenshot 2025-08-30 132157" src="https://github.com/user-attachments/assets/07594fa2-7c80-4a7d-9e68-30cea82bf534" />
 
-* 🔴 High
-* 🟡 Moderate
-* 🟢 Low
-
----
 
 ### ✅ Prescription Verification
 
@@ -56,20 +53,79 @@ Suggests alternative medications and provides relevant home remedies for common 
 
 ### 🤖 AI-Powered Summary
 
-Generates a consolidated, patient-friendly report summarizing verification results, dosage guidelines, and alternative remedies using **Watson AI summarization**.
+* Generates a **final patient-friendly report** consolidating:
+
+  * Verification results
+  * Dosage guidelines
+  * Alternative remedies
+* Uses **Google Gemini summarization** for clear, simple medical summaries.
+<img width="1791" height="790" alt="Screenshot 2025-08-30 132625" src="https://github.com/user-attachments/assets/f7d1b27a-2d80-4eb9-8503-69e8bf4d931a" />
 
 ---
 
 ## 🏗️ Tech Stack
 
-| Category   | Technology                                                                     |
-| ---------- | ------------------------------------------------------------------------------ |
-| Frontend   | Streamlit                                                                      |
-| Backend    | FastAPI                                                                        |
-| AI Models  | HuggingFace Transformers (d4data/biomedical-ner-all), IBM Granite (Watsonx.ai) |
-| OCR        | Google Cloud Vision API                                                        |
-| Data       | Pandas                                                                         |
-| Deployment | Docker                                                                         |
+* **Frontend:** [Streamlit](https://streamlit.io/)
+* **Backend:** [FastAPI](https://fastapi.tiangolo.com/)
+* **AI Models:** HuggingFace Transformers (`d4data/biomedical-ner-all`), Google Gemini (Generative AI)
+* **OCR:** Google Cloud Vision API
+* **Dataset:** `dosage.csv` + curated alternative medicines dataset
+* **Other Libraries:**
+
+  * `pandas` for data processing
+  * `requests` for API calls
+  * `dotenv` for environment management
+
+---
+
+## 📂 Project Structure
+
+```
+medify/
+├── README.md
+├── docker-compose.yml
+├── render.yaml
+├── .env.example
+│
+<<<<<<< Updated upstream
+├── backend/                # FastAPI backend
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── main.py             # Entry point for backend
+│   ├── data_processors/    # Data preprocessing utilities
+│   │   ├── dosage.py
+│   │   └── prescription.py
+│   ├── routers/            # API routes
+│   │   ├── ai_router.py
+│   │   └── drug_info.py
+│   └── watson_ai/          # IBM Watson AI integration
+│       ├── ai_config.py
+│       ├── interactions.py
+│       └── summarizer.py
+=======
+├── backend/
+│   ├── main.py               # FastAPI entrypoint
+│   ├── routers/              # API endpoints
+│   ├── data_processors/      # Dosage & prescription validation
+│   ├── watson_ai/            # Gemini AI integration (Gemini client lives here)
+>>>>>>> Stashed changes
+│
+├── datasets/               # Project datasets
+│   ├── alt_dataset.py
+│   ├── dosage.csv
+│   └── ner_dataset.py
+│
+└── frontend/               # Streamlit/Frontend app
+    ├── Dockerfile
+    ├── requirements.txt
+    ├── app.py              # Entry point for frontend
+    └── features/           # Core frontend features
+        ├── ai_services.py
+        ├── alternative.py
+        ├── ner.py
+        ├── ocr.py
+        └── verification_client.py
+```
 
 ---
 
@@ -78,7 +134,7 @@ Generates a consolidated, patient-friendly report summarizing verification resul
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/medify.git
+git clone https://github.com/Risspecct/Medify.git
 cd medify
 ```
 
@@ -143,7 +199,18 @@ pip install -r frontend/requirements.txt
 pip install -r backend/requirements.txt
 ```
 
-#### c. Run the Backend Server
+### 4️⃣ Configure Environment
+
+Copy `.env.example` → `.env` and set:
+
+```ini
+GENAI_API_KEY=your_genai_api_key
+GEMINI_MODEL_ID=models/gemini-1.5
+FAST_API_URL=http://127.0.0.1:8000
+DOSAGE_FILE_PATH=datasets/dosage.csv
+```
+
+### 5️⃣ Run Backend
 
 ```bash
 cd backend

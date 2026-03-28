@@ -22,10 +22,13 @@ def call_interaction_api(medicines: List[str]) -> str:
     payload = {"medicines": medicines}
 
     try:
-        response = requests.post(endpoint, json=payload)
+        response = requests.post(endpoint, json=payload, timeout=30)
         response.raise_for_status()
-        # The backend returns the raw text from the LLM, which requests decodes
-        return response.json()
+        try:
+            return response.json()
+        except ValueError:
+            # Backend returned plain text (not JSON)
+            return response.text
     except requests.exceptions.RequestException as e:
         st.error(f"Could not connect to the AI Interaction service. Is the backend running? Error: {e}")
         return "Interaction analysis could not be performed due to a connection error."
@@ -52,10 +55,12 @@ def call_summary_api(analysis_data: Dict[str, Any]) -> str:
     payload = {"outputs": outputs_list}
 
     try:
-        response = requests.post(endpoint, json=payload)
+        response = requests.post(endpoint, json=payload, timeout=30)
         response.raise_for_status()
-        # The backend returns the raw text from the LLM
-        return response.json()
+        try:
+            return response.json()
+        except ValueError:
+            return response.text
     except requests.exceptions.RequestException as e:
         st.error(f"Could not connect to the AI Summarizer service. Is the backend running? Error: {e}")
         return "Summary could not be generated due to a connection error."
