@@ -1,230 +1,258 @@
 def get_dataset_alt():
+
     ALTERNATIVE_KNOWLEDGE_BASE = {
-        "paracetamol": {
-            "description": "A common pain reliever and fever reducer.",
-            "alternatives": [
-                "Ibuprofen (also an anti-inflammatory, but check for stomach issues)",
-                "Aspirin (not for children, also a blood thinner)"
-            ],
-            "home_remedies_for_common_uses": {
-                "For Fever": "Stay hydrated, rest, use a lukewarm compress.",
-                "For Headache": "Rest in a quiet room, apply a cold pack, stay hydrated."
-            },
-            "notes": "Paracetamol is generally safe but can cause liver damage at very high doses."
-        },
-        "ibuprofen": {
-            "description": "A nonsteroidal anti-inflammatory drug (NSAID) for pain, fever, and inflammation.",
-            "alternatives": [
-                "Paracetamol (safer for the stomach but not anti-inflammatory)",
-                "Naproxen (another NSAID, longer-lasting)"
-            ],
-            "home_remedies_for_common_uses": {
-                "For Pain/Inflammation": "Rest the affected area, apply ice packs."
-            },
-            "notes": "Should be taken with food to avoid stomach upset. Avoid if you have kidney problems or ulcers."
-        },
-        "cetirizine": {
-            "description": "An antihistamine used to relieve allergy symptoms.",
-            "alternatives": [
-                "Loratadine (less likely to cause drowsiness)",
-                "Fexofenadine (also a non-drowsy option)"
-            ],
-            "home_remedies_for_common_uses": {
-                "For Allergies": "Avoid known allergens, use a saline nasal rinse, keep windows closed during high pollen seasons."
-            },
-            "notes": "Can cause drowsiness in some individuals."
-        },
-        "amoxicillin": {
-            "description": "A penicillin-type antibiotic used to treat bacterial infections.",
-            "alternatives": [
-                "Doxycycline (for patients with penicillin allergy)",
-                "Azithromycin (another common alternative for respiratory infections)"
-            ],
-            "home_remedies_for_common_uses": {
-                "General Support for Infections": "Get plenty of rest, stay hydrated to help your body fight the infection."
-            },
-            "notes": "This is a prescription-only medication. Alternatives must be prescribed by a doctor."
-        },
-        "paracetamol": {
-            "description": "A common analgesic (pain reliever) and antipyretic (fever reducer) used for mild to moderate pain and fever.",
-            "alternatives": [
-                "Ibuprofen (also an anti-inflammatory, but check for stomach issues)",
-                "Aspirin (not for children, also a blood thinner)",
-                "Naproxen"
-            ],
-            "home_remedies_for_common_uses": {
-                "For Fever": "Stay hydrated, rest, use a lukewarm compress.",
-                "For Headache": "Rest in a quiet, dark room, apply a cold pack to the forehead, stay hydrated."
-            },
-            "notes": "Generally safe but can cause severe liver damage at very high doses. It is important not to exceed the recommended daily limit."
-        },
-        "ibuprofen": {
-            "description": "A nonsteroidal anti-inflammatory drug (NSAID) used to relieve pain, fever, and inflammation.",
-            "alternatives": [],
-            "home_remedies_for_common_uses": {
-                "For Pain/Inflammation": "Rest the affected area, apply ice packs for the first 48 hours, then switch to heat."
-            },
-            "notes": "Should be taken with food to avoid stomach upset. Long-term use can increase the risk of heart attack, stroke, and stomach bleeding. Avoid if you have kidney problems or ulcers."
-        },
-        "cetirizine": {
-            "description": "A second-generation antihistamine used to relieve allergy symptoms such as hay fever and hives.",
-            "alternatives": [
-                "Loratadine (less likely to cause drowsiness)",
-                "Fexofenadine (also a non-drowsy option)",
-                "Chlorphenamine (first-generation, can cause more drowsiness)"
-            ],
-            "home_remedies_for_common_uses": {
-                "For Allergies": "Avoid known allergens, use a saline nasal rinse, keep windows closed during high pollen seasons, wash hair and clothes after being outside."
-            },
-            "notes": "Classified as non-drowsy, but can still cause drowsiness in some individuals. Generally starts working within an hour."
-        },
-        "amoxicillin": {
-            "description": "A penicillin-type antibiotic used to treat a wide variety of bacterial infections.",
-            "alternatives": [],
-            "home_remedies_for_common_uses": {
-                "General Support for Infections": "Get plenty of rest and stay hydrated to help your body fight the infection. Take probiotics to help maintain gut health."
-            },
-            "notes": "This is a prescription-only medication. It is crucial to complete the full course as prescribed, even if symptoms improve, to prevent antibiotic resistance. Not effective against viral infections like the common cold or flu."
-        },
-        "naproxen": {
-            "description": "A nonsteroidal anti-inflammatory drug (NSAID) used to relieve pain, inflammation, and stiffness associated with conditions like arthritis, gout, and menstrual cramps.",
-            "alternatives": [],
-            "home_remedies_for_common_uses": {
-                "For Musculoskeletal Pain": "Rest, ice, compression, and elevation (RICE method) for injuries like sprains. Gentle stretching and physical therapy exercises.",
-                "For Arthritis": "Low-impact exercise like swimming or walking, applying heat or cold packs to affected joints, maintaining a healthy weight."
-            },
-            "notes": "Has a longer half-life than ibuprofen, allowing for less frequent dosing. Carries a risk of serious gastrointestinal bleeding, heart attack, and stroke, particularly with long-term use. Should be taken with food."
-        },
-        "loratadine": {
-            "description": "A second-generation antihistamine used to relieve symptoms of allergic rhinitis (hay fever) and urticaria (hives), such as sneezing, runny nose, and itching.",
-            "alternatives": [],
-            "home_remedies_for_common_uses": {
-                "For Hay Fever": "Wear wraparound sunglasses, apply petroleum jelly around nostrils to trap pollen, shower after being outdoors, keep windows closed, and use a HEPA filter indoors."
-            },
-            "notes": "Classified as 'non-drowsy' as it does not readily cross the blood-brain barrier, but a small percentage of users may still experience sleepiness. Typically begins to work within 1 to 3 hours."
-        },
-        "omeprazole": {
-            "description": "A proton pump inhibitor (PPI) that reduces the amount of acid produced in the stomach. Used to treat GERD, heartburn, and stomach ulcers.",
-            "alternatives": [],
-            "home_remedies_for_common_uses": {
-                "For GERD/Heartburn": "Avoid trigger foods (e.g., spicy, fatty, acidic), eat smaller meals, avoid lying down for 2-3 hours after eating, elevate the head of the bed, and manage weight."
-            },
-            "notes": "For maximum efficacy, it must be taken on an empty stomach, 30-60 minutes before the first meal of the day. Long-term use can lead to vitamin B-12 deficiency and an increased risk of bone fractures."
-        },
-        "atorvastatin": {
-            "description": "An HMG-CoA reductase inhibitor (statin) used to lower levels of 'bad' cholesterol (LDL) and triglycerides, while increasing 'good' cholesterol (HDL). It is used to reduce the risk of heart attack and stroke.",
-            "alternatives":[],
-            "home_remedies_for_common_uses": {
-                "For High Cholesterol": "Adopt a low-fat, low-cholesterol diet (like the Mediterranean diet), engage in regular aerobic exercise, maintain a healthy weight, and quit smoking."
-            },
-            "notes": "Avoid consuming large quantities of grapefruit or grapefruit juice. Report any unexplained muscle pain, tenderness, or weakness immediately, as this could be a sign of a rare but serious condition called rhabdomyolysis."
-        },
-        "amlodipine": {
-            "description": "A calcium channel blocker used for the treatment of hypertension (high blood pressure) and to treat and prevent angina (chest pain).",
-            "alternatives":[],
-            "home_remedies_for_common_uses": {
-                "For Hypertension": "Follow a low-sodium diet (like the DASH diet), maintain a healthy weight, exercise regularly, limit alcohol consumption, and manage stress."
-            },
-            "notes": "The most common side effect is swelling of the hands, feet, or ankles (peripheral edema). Consuming large amounts of grapefruit or grapefruit juice can increase the concentration of amlodipine in the blood and worsen side effects."
-        },
-        "lisinopril": {
-            "description": "An angiotensin-converting enzyme (ACE) inhibitor used to treat hypertension (high blood pressure), manage heart failure, and improve survival after a heart attack.",
-            "alternatives":[],
-            "home_remedies_for_common_uses": {
-                "For Hypertension": "Weight control, a low-sodium diet, regular physical activity, and limiting alcohol intake are crucial alongside medication."
-            },
-            "notes": "The most characteristic side effect is a dry, tickly, persistent cough. The first dose may cause significant dizziness and is often recommended to be taken at bedtime. Contraindicated during pregnancy due to risk of fetal harm."
-        },
-        "sertraline": {
-            "description": "A selective serotonin reuptake inhibitor (SSRI) used to treat major depressive disorder (MDD), obsessive-compulsive disorder (OCD), panic disorder, PTSD, and social anxiety disorder.",
-            "alternatives":[],
-            "home_remedies_for_common_uses": {
-                "For Mental Health Conditions": "Cognitive-behavioral therapy (CBT), regular exercise, mindfulness meditation, maintaining a consistent sleep schedule, and a balanced diet can support treatment."
-            },
-            "notes": "Carries a warning for an increased risk of suicidal thoughts and behaviors in children and young adults. It typically takes 4 to 6 weeks to reach its full therapeutic effect. Do not drink grapefruit juice while taking."
-        },
-        "fluoxetine": {
-             "description": "A selective serotonin reuptake inhibitor (SSRI) approved for the treatment of major depressive disorder (MDD), obsessive-compulsive disorder (OCD), bulimia nervosa, and panic disorder.",
-            "alternatives":[],
-            "home_remedies_for_common_uses": {
-                "For Mental Health Conditions": "Psychotherapy (talk therapy) in combination with medication is often the most effective treatment strategy. Regular physical activity and stress management techniques are also beneficial."
-            },
-            "notes": "Has a very long elimination half-life, which reduces the severity of withdrawal symptoms but requires a long 'washout' period when switching to other interacting medications like MAOIs. Avoid alcohol."
-        },
-        "alprazolam": {
-            "description": "A fast-acting benzodiazepine used for the short-term management of anxiety disorders and for the treatment of panic disorder.",
-            "alternatives":[],
-            "home_remedies_for_common_uses": {
-                "For Anxiety": "Deep breathing exercises, mindfulness meditation, progressive muscle relaxation, regular exercise, and avoiding caffeine and other stimulants."
-            },
-            "notes": "High potential for abuse, misuse, and addiction. Can cause physical dependence and severe withdrawal symptoms. Co-administration with opioids or other CNS depressants (including alcohol) can result in profound sedation, respiratory depression, coma, and death. Grapefruit and grapefruit juice should not be consumed."
-        },
-        "hydrocortisone_topical": {
-            "description": "A low-potency topical corticosteroid used to treat the redness, swelling, itching, and discomfort of various inflammatory skin conditions like eczema, dermatitis, and insect bites.",
-            "alternatives": [
-                "More potent topical steroids (prescription-only, for severe conditions)",
-                "Non-steroidal creams or emollients (for mild inflammation)",
-                "Calcineurin inhibitors (e.g., tacrolimus, for sensitive areas)"
-            ],
-            "home_remedies_for_common_uses": {
-            "For Skin Conditions": "Avoiding known irritants and allergens, keeping the skin well-moisturized with fragrance-free emollients, and taking lukewarm baths with colloidal oatmeal."
-        },
-        "notes": "Should not be applied to broken skin, cuts, or infected areas. Long-term or extensive use can lead to skin thinning (atrophy). Over-the-counter use should not exceed 7 days without consulting a doctor."
-    },
-    "clotrimazole_topical": {
-        "description": "An imidazole antifungal agent used to treat fungal skin infections such as athlete's foot (tinea pedis), jock itch (tinea cruris), and ringworm (tinea corporis).",
-        "alternatives":[],
-        "home_remedies_for_common_uses": {
-            "For Fungal Infections": "Keep the affected skin clean and dry, avoid tight-fitting synthetic clothing (wear loose cotton instead), and do not share towels. For athlete's foot, dry thoroughly between the toes and wear clean, changed-daily cotton socks."
-        },
-        "notes": "Treatment should be continued for the full recommended duration (e.g., 2-4 weeks) even if symptoms improve earlier to prevent recurrence. The cream form can damage latex condoms and diaphragms, reducing their effectiveness."
-    },
-    "mupirocin": {
-        "description": "A topical antibiotic used for the treatment of impetigo and secondarily infected traumatic skin lesions (e.g., infected cuts or wounds).",
+    "paracetamol": {
+        "description": "A common analgesic (pain reliever) and antipyretic (fever reducer) used for mild to moderate pain and fever.",
+        "price_in_inr": 15,
         "alternatives": [
-            "Over-the-counter antibiotic ointments (e.g., Neosporin, bacitracin) for prevention in minor cuts.",
-            "Oral antibiotics (Cephalexin, Clindamycin) for more severe or widespread infections."
+            {"name": "Ibuprofen", "price_in_inr": 20},
+            {"name": "Aspirin", "price_in_inr": 10},
+            {"name": "Naproxen", "price_in_inr": 110}
         ],
         "home_remedies_for_common_uses": {
-            "For Skin Infections": "Keep the area clean and covered with a sterile bandage. Wash hands before and after application to prevent spreading the infection."
+            "For Fever": "Stay hydrated, rest, use a lukewarm compress.",
+            "For Headache": "Rest in a quiet, dark room, apply a cold pack to the forehead, stay hydrated."
         },
-        "notes": "Effective against methicillin-resistant Staphylococcus aureus (MRSA). It is important to complete the full course of treatment to prevent recurrence and the development of antibiotic resistance. Contact a healthcare provider if there is no improvement after 3 to 5 days."
+        "notes": "Generally safe but can cause severe liver damage at very high doses. Do not exceed the recommended daily limit."
+    },
+    "ibuprofen": {
+        "description": "A nonsteroidal anti-inflammatory drug (NSAID) used to relieve pain, fever, and inflammation.",
+        "price_in_inr": 20,
+        "alternatives": [
+            {"name": "Paracetamol", "price_in_inr": 15},
+            {"name": "Naproxen", "price_in_inr": 110}
+        ],
+        "home_remedies_for_common_uses": {
+            "For Pain/Inflammation": "Rest the affected area, apply ice packs for the first 48 hours, then switch to heat."
+        },
+        "notes": "Should be taken with food to avoid stomach upset. Avoid if you have kidney problems or ulcers."
+    },
+    "cetirizine": {
+        "description": "A second-generation antihistamine used to relieve allergy symptoms such as hay fever and hives.",
+        "price_in_inr": 30,
+        "alternatives": [
+            {"name": "Loratadine", "price_in_inr": 80},
+            {"name": "Fexofenadine", "price_in_inr": 160},
+            {"name": "Chlorphenamine", "price_in_inr": 15}
+        ],
+        "home_remedies_for_common_uses": {
+            "For Allergies": "Avoid known allergens, use a saline nasal rinse, keep windows closed during high pollen seasons."
+        },
+        "notes": "Classified as non-drowsy, but can still cause drowsiness in some individuals."
+    },
+    "amoxicillin": {
+        "description": "A penicillin-type antibiotic used to treat a wide variety of bacterial infections.",
+        "price_in_inr": 105,
+        "alternatives": [
+            {"name": "Doxycycline", "price_in_inr": 45},
+            {"name": "Azithromycin", "price_in_inr": 125}
+        ],
+        "home_remedies_for_common_uses": {
+            "General Support for Infections": "Get plenty of rest and stay hydrated. Take probiotics to help maintain gut health."
+        },
+        "notes": "Prescription-only. Complete the full course even if symptoms improve to prevent antibiotic resistance."
+    },
+    "naproxen": {
+        "description": "A nonsteroidal anti-inflammatory drug (NSAID) used to relieve pain, inflammation, and stiffness.",
+        "price_in_inr": 110,
+        "alternatives": [
+            {"name": "Ibuprofen", "price_in_inr": 20},
+            {"name": "Paracetamol", "price_in_inr": 15}
+        ],
+        "home_remedies_for_common_uses": {
+            "For Musculoskeletal Pain": "Rest, ice, compression, and elevation (RICE method). Gentle stretching.",
+            "For Arthritis": "Low-impact exercise like swimming, applying heat or cold packs."
+        },
+        "notes": "Has a longer half-life than ibuprofen, allowing for less frequent dosing. Should be taken with food."
+    },
+    "loratadine": {
+        "description": "A second-generation antihistamine used to relieve symptoms of allergic rhinitis (hay fever) and urticaria (hives).",
+        "price_in_inr": 45,
+        "alternatives": [
+            {"name": "Cetirizine", "price_in_inr": 30},
+            {"name": "Fexofenadine", "price_in_inr": 160}
+        ],
+        "home_remedies_for_common_uses": {
+            "For Hay Fever": "Wear wraparound sunglasses, apply petroleum jelly around nostrils to trap pollen, and use a HEPA filter indoors."
+        },
+        "notes": "Classified as 'non-drowsy', though a small percentage of users may still experience sleepiness. Typically works within 1 to 3 hours."
+    },
+    "omeprazole": {
+        "description": "A proton pump inhibitor (PPI) that reduces stomach acid. Used for GERD, heartburn, and ulcers.",
+        "price_in_inr": 30,
+        "alternatives": [
+            {"name": "Pantoprazole", "price_in_inr": 80},
+            {"name": "Rabeprazole", "price_in_inr": 100}
+        ],
+        "home_remedies_for_common_uses": {
+            "For GERD/Heartburn": "Avoid trigger foods (spicy, fatty), eat smaller meals, and avoid lying down for 2-3 hours after eating."
+        },
+        "notes": "Must be taken on an empty stomach, 30-60 minutes before the first meal. Long-term use can lead to vitamin B-12 deficiency."
+    },
+    "atorvastatin": {
+        "description": "A statin used to lower 'bad' cholesterol (LDL) and triglycerides while increasing 'good' cholesterol (HDL).",
+        "price_in_inr": 56,
+        "alternatives": [
+            {"name": "Rosuvastatin", "price_in_inr": 120},
+            {"name": "Simvastatin", "price_in_inr": 40}
+        ],
+        "home_remedies_for_common_uses": {
+            "For High Cholesterol": "Adopt a low-fat diet (Mediterranean style), engage in regular aerobic exercise, and quit smoking."
+        },
+        "notes": "Avoid large quantities of grapefruit juice. Report any unexplained muscle pain or weakness to a doctor immediately."
+    },
+    "amlodipine": {
+        "description": "A calcium channel blocker used for the treatment of hypertension (high blood pressure) and angina.",
+        "price_in_inr": 25,
+        "alternatives": [
+            {"name": "Telmisartan", "price_in_inr": 60},
+            {"name": "Cilnidipine", "price_in_inr": 80}
+        ],
+        "home_remedies_for_common_uses": {
+            "For Hypertension": "Follow a low-sodium diet (DASH diet), maintain a healthy weight, and manage stress."
+        },
+        "notes": "Common side effect is swelling of the ankles (edema). Grapefruit juice can increase blood concentration levels."
+    },
+    "lisinopril": {
+        "description": "An ACE inhibitor used to treat hypertension, manage heart failure, and improve survival after a heart attack.",
+        "price_in_inr": 84,
+        "alternatives": [
+            {"name": "Enalapril", "price_in_inr": 30},
+            {"name": "Ramipril", "price_in_inr": 50}
+        ],
+        "home_remedies_for_common_uses": {
+            "For Hypertension": "Weight control, low-sodium diet, and regular physical activity are crucial alongside medication."
+        },
+        "notes": "A characteristic side effect is a dry, persistent cough. Contraindicated during pregnancy."
+    },
+    "sertraline": {
+        "description": "An SSRI used to treat major depressive disorder, OCD, panic disorder, and social anxiety.",
+        "price_in_inr": 75,
+        "alternatives": [
+            {"name": "Fluoxetine", "price_in_inr": 40},
+            {"name": "Escitalopram", "price_in_inr": 90}
+        ],
+        "home_remedies_for_common_uses": {
+            "For Mental Health": "Cognitive-behavioral therapy (CBT), regular exercise, and mindfulness meditation support treatment."
+        },
+        "notes": "Typically takes 4 to 6 weeks to reach full effect. Do not drink grapefruit juice while taking."
+    },
+    "fluoxetine": {
+        "description": "An SSRI approved for the treatment of depression, OCD, bulimia nervosa, and panic disorder.",
+        "price_in_inr": 40,
+        "alternatives": [
+            {"name": "Sertraline", "price_in_inr": 75},
+            {"name": "Escitalopram", "price_in_inr": 90}
+        ],
+        "home_remedies_for_common_uses": {
+            "For Mental Health": "Psychotherapy in combination with medication is often the most effective strategy. Avoid alcohol."
+        },
+        "notes": "Has a very long half-life, which reduces withdrawal severity but requires a long washout period if switching meds."
+    },
+    "alprazolam": {
+        "description": "A fast-acting benzodiazepine used for short-term management of anxiety and panic disorders.",
+        "price_in_inr": 74,
+        "alternatives": [
+            {"name": "Clonazepam", "price_in_inr": 60},
+            {"name": "Etizolam", "price_in_inr": 80}
+        ],
+        "home_remedies_for_common_uses": {
+            "For Anxiety": "Deep breathing exercises, progressive muscle relaxation, and avoiding caffeine or stimulants."
+        },
+        "notes": "High potential for addiction and physical dependence. Strictly prescription-only (Schedule X/H1 in India)."
+    },
+    "hydrocortisone_topical": {
+        "description": "A low-potency topical steroid used for redness, swelling, and itching of skin conditions like eczema.",
+        "price_in_inr": 42,
+        "alternatives": [
+            {"name": "Betamethasone", "price_in_inr": 25},
+            {"name": "Clobetasol", "price_in_inr": 60}
+        ],
+        "home_remedies_for_common_uses": {
+            "For Skin Conditions": "Avoid known irritants and keep skin moisturized with fragrance-free emollients."
+        },
+        "notes": "Do not apply to broken skin or infected areas. OTC use should not exceed 7 days."
+    },
+    "clotrimazole_topical": {
+        "description": "An imidazole antifungal agent used to treat fungal skin infections such as athlete's foot, jock itch, and ringworm.",
+        "price_in_inr": 45,
+        "alternatives": [
+            {"name": "Terbinafine", "price_in_inr": 120},
+            {"name": "Luliconazole", "price_in_inr": 170},
+            {"name": "Ketoconazole", "price_in_inr": 100}
+        ],
+        "home_remedies_for_common_uses": {
+            "For Fungal Infections": "Keep the affected skin clean and dry, avoid tight-fitting synthetic clothing, and do not share towels."
+        },
+        "notes": "Treatment should be continued for the full duration (2-4 weeks) even if symptoms improve to prevent recurrence."
+    },
+    "mupirocin": {
+        "description": "A topical antibiotic used for the treatment of impetigo and secondarily infected traumatic skin lesions like cuts.",
+        "price_in_inr": 110,
+        "alternatives": [
+            {"name": "Neosporin Ointment", "price_in_inr": 60},
+            {"name": "Povidone-Iodine", "price_in_inr": 45}
+        ],
+        "home_remedies_for_common_uses": {
+            "For Skin Infections": "Keep the area clean and covered with a sterile bandage. Wash hands before and after application."
+        },
+        "notes": "Effective against MRSA. Complete the full course of treatment to prevent the development of antibiotic resistance."
     },
     "metformin": {
-        "description": "A first-line biguanide oral medication used to improve glycemic control in people with type 2 diabetes. It is also used off-label for polycystic ovary syndrome (PCOS).",
-        "alternatives":[],
+        "description": "A first-line oral medication used to improve glycemic control in people with type 2 diabetes.",
+        "price_in_inr": 22,
+        "alternatives": [
+            {"name": "Glimepiride", "price_in_inr": 55},
+            {"name": "Voglibose", "price_in_inr": 80}
+        ],
         "home_remedies_for_common_uses": {
-            "For Type 2 Diabetes": "A cornerstone of treatment is a balanced diet focused on whole grains, lean proteins, and vegetables, combined with regular physical activity and weight management."
+            "For Type 2 Diabetes": "A balanced diet focused on whole grains and lean proteins, combined with regular physical activity."
         },
-        "notes": "Carries a boxed warning for a rare but serious condition called lactic acidosis. Gastrointestinal side effects (diarrhea, nausea) are very common, especially when starting. Should be taken with meals to minimize these effects. Excessive alcohol intake increases the risk of lactic acidosis."
+        "notes": "Commonly causes gastrointestinal side effects like nausea. Should be taken with meals to minimize these effects."
     },
     "levothyroxine": {
-        "description": "A synthetic thyroid hormone used as the standard treatment for hypothyroidism (underactive thyroid) and as an adjunctive therapy for certain types of thyroid cancer.",
-        "alternatives":[],
+        "description": "A synthetic thyroid hormone used as the standard treatment for hypothyroidism (underactive thyroid).",
+        "price_in_inr": 168,
+        "alternatives": [
+            {"name": "Eltroxin", "price_in_inr": 210},
+            {"name": "Thyronorm", "price_in_inr": 210}
+        ],
         "home_remedies_for_common_uses": {
-            "For Thyroid Health": "A balanced diet with adequate iodine is necessary for natural thyroid function. Foods rich in iodine include iodized salt, dairy products, seafood, and eggs. Manage stress and ensure adequate sleep."
+            "For Thyroid Health": "Ensure a balanced diet with adequate iodine (iodized salt, dairy, seafood). Manage stress and sleep."
         },
-        "notes": "Must be taken once daily on an empty stomach, 30 to 60 minutes before breakfast, with a full glass of water. Has a narrow therapeutic index; the dose must be carefully monitored with regular blood tests. Treatment is typically lifelong."
+        "notes": "Must be taken on an empty stomach, 30-60 minutes before breakfast. Treatment is typically lifelong."
     },
     "insulin_glargine": {
-        "description": "A long-acting insulin analog used to improve glycemic control in people with type 1 and type 2 diabetes. It provides a steady, peakless, basal (background) level of insulin over approximately 24 hours.",
-        "alternatives":[],
+        "description": "A long-acting insulin analog that provides a steady, peakless level of insulin over approximately 24 hours.",
+        "price_in_inr": 650,
+        "alternatives": [
+            {"name": "Basalog", "price_in_inr": 570},
+            {"name": "Glaritus", "price_in_inr": 640}
+        ],
         "home_remedies_for_common_uses": {
-            "For Diabetes Management": "A structured meal plan, regular physical activity, and consistent blood glucose monitoring are essential. Patients should be educated on how to recognize and treat hypoglycemia with a quick-acting source of sugar."
+            "For Diabetes Management": "Consistent blood glucose monitoring and a structured meal plan are essential."
         },
-        "notes": "The most significant risk is hypoglycemia (low blood sugar). Injection sites should be rotated among the abdomen, thigh, and upper arm to prevent lipodystrophy (changes in fatty tissue). Must not be mixed with any other insulin in the same syringe."
+        "notes": "The primary risk is hypoglycemia. Injection sites should be rotated among the abdomen, thigh, and arm."
     },
     "salbutamol": {
-        "description": "A short-acting beta-2 agonist (SABA) bronchodilator, also known as Albuterol. It is used as a 'reliever' or 'rescue' medication for the rapid relief of bronchospasm in asthma and COPD.",
-        "alternatives":[],
+        "description": "A rescue medication used for the rapid relief of bronchospasm in asthma and COPD.",
+        "price_in_inr": 155,
+        "alternatives": [
+            {"name": "Levosalbutamol", "price_in_inr": 200},
+            {"name": "Terbutaline", "price_in_inr": 40}
+        ],
         "home_remedies_for_common_uses": {
-            "For Asthma Management": "Identifying and avoiding triggers (pollen, dust mites, pet dander). Using allergy-proof bedding and removing carpets can help reduce exposure to indoor allergens. Practicing breathing exercises."
+            "For Asthma Management": "Identifying and avoiding triggers like pollen or dust. Practicing breathing exercises."
         },
-        "notes": "Common side effects include shakiness (tremor), nervousness, and a fast heart rate. Overuse (more than 3-4 times a week) can be a sign of worsening asthma control and requires medical review. Proper inhaler technique is critical for effectiveness."
+        "notes": "Overuse (more than 3-4 times a week) suggests poor asthma control and requires a medical review."
     },
     "fluticasone": {
         "description": "A corticosteroid with potent anti-inflammatory activity. The nasal spray is used for allergic rhinitis (hay fever), and the topical cream is used for inflammatory skin conditions like eczema and psoriasis.",
-        "alternatives":[],
+        "price_in_inr": 372,
+        "alternatives": [
+            { "name": "Flomist-F Nasal Spray", "price_in_inr": 583 },
+            { "name": "Flutizing Nasal Spray", "price_in_inr": 271 }
+        ],
         "home_remedies_for_common_uses": {
             "For Allergies": "Avoiding known triggers and using saline nasal rinses.",
             "For Skin Conditions": "Using gentle, fragrance-free cleansers and regularly applying emollients to maintain the skin barrier."
@@ -233,7 +261,11 @@ def get_dataset_alt():
     },
     "montelukast": {
         "description": "A leukotriene receptor antagonist used for the chronic treatment of asthma, prevention of exercise-induced bronchoconstriction, and relief of allergic rhinitis.",
-        "alternatives":[],
+        "price_in_inr": 142,
+        "alternatives": [
+            { "name": "Montecip LC (Montelukast + Levocetirizine)", "price_in_inr": 229 },
+            { "name": "Leozet M", "price_in_inr": 47 }
+        ],
         "home_remedies_for_common_uses": {
             "General Support for Asthma/Allergies": "Continue to use prescribed inhalers and have a rescue inhaler (like salbutamol) available at all times. Avoid known triggers."
         },
@@ -241,7 +273,11 @@ def get_dataset_alt():
     },
     "azithromycin": {
         "description": "A macrolide antibiotic used to treat a wide variety of bacterial infections, including chest infections, ear/nose/throat infections, skin infections, and certain STIs like chlamydia.",
-        "alternatives":[],
+        "price_in_inr": 125,
+        "alternatives": [
+            { "name": "Azicip 500", "price_in_inr": 75 },
+            { "name": "Azee 500", "price_in_inr": 125 }
+        ],
         "home_remedies_for_common_uses": {
             "General Support for Infections": "Complete the full course of antibiotics. Stay hydrated and get adequate rest. Taking probiotics may help mitigate gastrointestinal side effects like diarrhea."
         },
@@ -249,7 +285,11 @@ def get_dataset_alt():
     },
     "ciprofloxacin": {
         "description": "A broad-spectrum fluoroquinolone antibiotic used to treat various bacterial infections, including urinary tract, respiratory, skin, and bone infections. Also used for anthrax exposure.",
-        "alternatives":[],
+        "price_in_inr": 45,
+        "alternatives": [
+            { "name": "Ciplox 500", "price_in_inr": 45 },
+            { "name": "Cifran 500", "price_in_inr": 45 }
+        ],
         "home_remedies_for_common_uses": {
             "General Support for Infections": "Drink plenty of liquids to stay hydrated. Complete the full course of treatment as prescribed to prevent resistance."
         },
@@ -257,10 +297,10 @@ def get_dataset_alt():
     },
     "aspirin": {
         "description": "A nonsteroidal anti-inflammatory drug (NSAID) and antiplatelet agent used for pain, fever, inflammation, and to prevent blood clots, heart attacks, and strokes.",
+        "price_in_inr": 5,
         "alternatives": [
-            "Ibuprofen (for pain/fever)",
-            "Acetaminophen (for pain/fever, not anti-inflammatory)",
-            "Clopidogrel (as an antiplatelet alternative)"
+            { "name": "Ecosprin 75", "price_in_inr": 6 },
+            { "name": "Delisprin 75", "price_in_inr": 5 }
         ],
         "home_remedies_for_common_uses": {
             "For Pain": "Rest, application of cold or heat.",
@@ -270,7 +310,11 @@ def get_dataset_alt():
     },
     "celecoxib": {
         "description": "A selective COX-2 inhibitor, a type of NSAID, used to treat arthritis, pain, and inflammation with a potentially lower risk of gastrointestinal side effects than traditional NSAIDs.",
-        "alternatives":[],
+        "price_in_inr": 316,
+        "alternatives": [
+            { "name": "Cobix 200", "price_in_inr": 145 },
+            { "name": "Zycel 200", "price_in_inr": 316 }
+        ],
         "home_remedies_for_common_uses": {
             "For Arthritis Pain": "Low-impact exercise, physical therapy, hot/cold therapy, maintaining a healthy weight."
         },
@@ -278,7 +322,11 @@ def get_dataset_alt():
     },
     "colchicine": {
         "description": "An anti-gout agent used to treat and prevent gout attacks. It works by reducing inflammation and the buildup of uric acid crystals in the joints.",
-        "alternatives":[],
+        "price_in_inr": 34,
+        "alternatives": [
+            { "name": "Goutnil 0.5", "price_in_inr": 34 },
+            { "name": "Zycolchin 0.5", "price_in_inr": 29 }
+        ],
         "home_remedies_for_common_uses": {
             "For Gout": "Avoid trigger foods high in purines (red meat, organ meats, certain seafood), limit alcohol (especially beer), stay hydrated, and rest the affected joint."
         },
@@ -286,7 +334,11 @@ def get_dataset_alt():
     },
     "cyclobenzaprine": {
         "description": "A skeletal muscle relaxant used for the short-term relief of muscle spasms and pain associated with acute musculoskeletal conditions.",
-        "alternatives":[],
+        "price_in_inr": 159,
+        "alternatives": [
+            { "name": "Skelebenz 10", "price_in_inr": 248 },
+            { "name": "Mobrine", "price_in_inr": 196 }
+        ],
         "home_remedies_for_common_uses": {
             "For Muscle Spasms": "Rest, ice/heat therapy, gentle stretching, and physical therapy."
         },
@@ -294,10 +346,10 @@ def get_dataset_alt():
     },
     "diclofenac": {
         "description": "A nonsteroidal anti-inflammatory drug (NSAID) used to treat pain, inflammation, and arthritis. Available in oral and topical forms.",
+        "price_in_inr": 30,
         "alternatives": [
-            "Ibuprofen",
-            "Naproxen",
-            "Celecoxib"
+            { "name": "Voveran SR 100", "price_in_inr": 245 },
+            { "name": "Reactin 50", "price_in_inr": 21 }
         ],
         "home_remedies_for_common_uses": {
             "For Pain/Inflammation": "Rest, ice, compression, elevation (RICE). Physical therapy."
@@ -306,7 +358,11 @@ def get_dataset_alt():
     },
     "gabapentin": {
         "description": "An anticonvulsant medication also used to treat neuropathic (nerve) pain, such as postherpetic neuralgia (shingles pain) and diabetic neuropathy.",
-        "alternatives":[],
+        "price_in_inr": 153,
+        "alternatives": [
+            { "name": "Gabapin 300", "price_in_inr": 623 },
+            { "name": "Pentanerv 300", "price_in_inr": 245 }
+        ],
         "home_remedies_for_common_uses": {
             "For Nerve Pain": "Gentle exercise, physical therapy, mindfulness and meditation to manage the mental aspect of chronic pain, warm compresses."
         },
@@ -314,10 +370,10 @@ def get_dataset_alt():
     },
     "meloxicam": {
         "description": "A nonsteroidal anti-inflammatory drug (NSAID) used to treat pain and inflammation from osteoarthritis and rheumatoid arthritis.",
+        "price_in_inr": 87,
         "alternatives": [
-            "Naproxen",
-            "Ibuprofen",
-            "Celecoxib"
+            { "name": "Muvera 15", "price_in_inr": 149 },
+            { "name": "Mobicam DT", "price_in_inr": 115 }
         ],
         "home_remedies_for_common_uses": {
             "For Arthritis": "Weight management, low-impact exercise, physical therapy, application of heat or cold."
@@ -326,7 +382,11 @@ def get_dataset_alt():
     },
     "methocarbamol": {
         "description": "A central nervous system depressant used as a skeletal muscle relaxant to treat muscle spasms and pain.",
-        "alternatives":[],
+        "price_in_inr": 106,
+        "alternatives": [
+            { "name": "Robinax 500", "price_in_inr": 118 },
+            { "name": "Robican 500", "price_in_inr": 106 }
+        ],
         "home_remedies_for_common_uses": {
             "For Muscle Pain": "Rest, physical therapy, massage, and application of heat or ice."
         },
@@ -334,15 +394,23 @@ def get_dataset_alt():
     },
     "oxycodone": {
         "description": "A potent opioid analgesic used for the management of moderate to severe pain.",
-        "alternatives":[],
+        "price_in_inr": 450,
+        "alternatives": [
+            { "name": "OxyContin (Global Brand)", "price_in_inr": 1200 },
+            { "name": "Tapentadol (Often used as a clinical alternative in India)", "price_in_inr": 200 }
+        ],
         "home_remedies_for_common_uses": {
             "For Pain Management": "Non-pharmacological approaches like physical therapy, acupuncture, massage, and cognitive-behavioral therapy can be used as part of a comprehensive pain management plan."
         },
-        "notes": "Prescription-only, Schedule II controlled substance. High potential for addiction, abuse, and misuse. Side effects include constipation, drowsiness, and respiratory depression. Should be used with extreme caution."
+        "notes": "Prescription-only, Schedule II/X controlled substance. High potential for addiction, abuse, and misuse. Side effects include constipation, drowsiness, and respiratory depression."
     },
     "prednisone": {
         "description": "A systemic corticosteroid used to treat a wide variety of inflammatory and autoimmune conditions, such as severe allergies, asthma, arthritis, and lupus.",
-        "alternatives":[],
+        "price_in_inr": 11,
+        "alternatives": [
+            { "name": "Wysolone 5", "price_in_inr": 11 },
+            { "name": "Omnacortil 5", "price_in_inr": 7 }
+        ],
         "home_remedies_for_common_uses": {
             "General Support for Inflammation": "An anti-inflammatory diet, stress management, and adequate rest can support overall health during treatment."
         },
@@ -350,7 +418,11 @@ def get_dataset_alt():
     },
     "pregabalin": {
         "description": "An anticonvulsant and gabapentinoid used to treat nerve pain, fibromyalgia, seizures, and generalized anxiety disorder.",
-        "alternatives":[],
+        "price_in_inr": 109,
+        "alternatives": [
+            { "name": "Pregalin 75", "price_in_inr": 212 },
+            { "name": "Neugaba 75", "price_in_inr": 182 }
+        ],
         "home_remedies_for_common_uses": {
             "For Nerve Pain/Fibromyalgia": "Graded exercise therapy, stress-reduction techniques like yoga and meditation, maintaining a regular sleep schedule."
         },
@@ -358,7 +430,11 @@ def get_dataset_alt():
     },
     "tizanidine": {
         "description": "A short-acting muscle relaxant (an alpha-2 adrenergic agonist) used to treat muscle spasticity.",
-        "alternatives":[],
+        "price_in_inr": 37,
+        "alternatives": [
+            { "name": "Tizan 2", "price_in_inr": 123 },
+            { "name": "Tizpa 2", "price_in_inr": 34 }
+        ],
         "home_remedies_for_common_uses": {
             "For Muscle Spasticity": "Stretching exercises, physical therapy, and occupational therapy."
         },
@@ -366,7 +442,11 @@ def get_dataset_alt():
     },
     "tramadol": {
         "description": "A centrally-acting opioid analgesic used to treat moderate to moderately severe pain.",
-        "alternatives":[],
+        "price_in_inr": 43,
+        "alternatives": [
+            { "name": "Tramazac 50", "price_in_inr": 51 },
+            { "name": "Contramal 50", "price_in_inr": 103 }
+        ],
         "home_remedies_for_common_uses": {
             "For Pain": "Physical therapy, ice/heat application, and mindfulness techniques can complement medication."
         },
@@ -374,7 +454,11 @@ def get_dataset_alt():
     },
     "chlorphenamine": {
         "description": "A first-generation antihistamine used to relieve symptoms of allergies and the common cold.",
-        "alternatives":[],
+        "price_in_inr": 50,
+        "alternatives": [
+            { "name": "CPM 4", "price_in_inr": 85 },
+            { "name": "Cadistin", "price_in_inr": 25 }
+        ],
         "home_remedies_for_common_uses": {
             "For Cold/Allergy Symptoms": "Rest, hydration, saline nasal sprays, and using a humidifier."
         },
@@ -382,7 +466,11 @@ def get_dataset_alt():
     },
     "bismuth_subsalicylate": {
         "description": "An antidiarrheal and antacid used to treat diarrhea, heartburn, nausea, and upset stomach.",
-        "alternatives":[],
+        "price_in_inr": 250,
+        "alternatives": [
+            { "name": "Bismuth Subsalicylate (Generic)", "price_in_inr": 250 },
+            { "name": "Pesto-Bismol (Imported)", "price_in_inr": 850 }
+        ],
         "home_remedies_for_common_uses": {
             "For Diarrhea": "Stay hydrated with clear fluids or oral rehydration solutions. Follow the BRAT diet (bananas, rice, applesauce, toast)."
         },
@@ -390,7 +478,11 @@ def get_dataset_alt():
     },
     "esomeprazole": {
         "description": "A proton pump inhibitor (PPI) that reduces stomach acid. Used to treat GERD, ulcers, and other acid-related conditions.",
-        "alternatives":[],
+        "price_in_inr": 77,
+        "alternatives": [
+            { "name": "Nexpro 40", "price_in_inr": 165 },
+            { "name": "Sompraz 40", "price_in_inr": 140 }
+        ],
         "home_remedies_for_common_uses": {
             "For Acid Reflux": "Avoid trigger foods, eat smaller meals, don't lie down after eating, and elevate the head of the bed."
         },
@@ -398,9 +490,10 @@ def get_dataset_alt():
     },
     "famotidine": {
         "description": "A histamine-2 (H2) blocker that reduces the amount of acid produced by the stomach. Used for GERD, ulcers, and heartburn.",
+        "price_in_inr": 11,
         "alternatives": [
-            "Proton Pump Inhibitors (Omeprazole, for more potent and longer-lasting suppression)",
-            "Antacids (for immediate relief)"
+            { "name": "Famocid 20", "price_in_inr": 11 },
+            { "name": "Facid 20", "price_in_inr": 8 }
         ],
         "home_remedies_for_common_uses": {
             "For Heartburn": "Dietary modifications, avoiding late-night meals, and weight management."
@@ -409,7 +502,11 @@ def get_dataset_alt():
     },
     "lansoprazole": {
         "description": "A proton pump inhibitor (PPI) used to treat and prevent stomach and intestinal ulcers, erosive esophagitis, and other conditions involving excessive stomach acid.",
-        "alternatives":[],
+        "price_in_inr": 65,
+        "alternatives": [
+            { "name": "Lanzol 30", "price_in_inr": 102 },
+            { "name": "Junior Lanzol 15", "price_in_inr": 184 }
+        ],
         "home_remedies_for_common_uses": {
             "For GERD": "Lifestyle changes such as diet modification, weight loss, and avoiding triggers."
         },
@@ -417,7 +514,12 @@ def get_dataset_alt():
     },
     "loperamide": {
         "description": "An antidiarrheal agent used to decrease the frequency of diarrhea by slowing down intestinal movement.",
-        "alternatives":[],
+        "price_in_inr": 24,
+        "alternatives": [
+            { "name": "Lopamide", "price_in_inr": 25 },
+            { "name": "Eldoper", "price_in_inr": 43 },
+            { "name": "Roko", "price_in_inr": 26 }
+        ],
         "home_remedies_for_common_uses": {
             "For Diarrhea": "Crucial to stay hydrated with water, broths, or oral rehydration solutions. The BRAT diet (bananas, rice, applesauce, toast) can help firm up stools."
         },
@@ -425,9 +527,11 @@ def get_dataset_alt():
     },
     "metoclopramide": {
         "description": "A prokinetic agent and antiemetic used to treat GERD, nausea, and gastroparesis (delayed stomach emptying).",
+        "price_in_inr": 14,
         "alternatives": [
-            "Ondansetron (for nausea)",
-            "Erythromycin (for gastroparesis)"
+            { "name": "Perinorm", "price_in_inr": 15 },
+            { "name": "Vominorm", "price_in_inr": 12 },
+            { "name": "Reglan", "price_in_inr": 10 }
         ],
         "home_remedies_for_common_uses": {
             "For Nausea/Gastroparesis": "Eating small, frequent meals that are low in fat and fiber. Avoiding carbonated beverages."
@@ -436,7 +540,12 @@ def get_dataset_alt():
     },
     "pantoprazole": {
         "description": "A proton pump inhibitor (PPI) that decreases the amount of acid produced in the stomach, used for GERD and erosive esophagitis.",
-        "alternatives":[],
+        "price_in_inr": 155,
+        "alternatives": [
+            { "name": "Pan 40", "price_in_inr": 175 },
+            { "name": "Pantocid", "price_in_inr": 195 },
+            { "name": "Pantop 40", "price_in_inr": 159 }
+        ],
         "home_remedies_for_common_uses": {
             "For Acid Reflux": "Dietary and lifestyle adjustments, such as avoiding trigger foods and eating smaller meals."
         },
@@ -444,7 +553,11 @@ def get_dataset_alt():
     },
     "sucralfate": {
         "description": "A mucosal protectant used to treat and prevent ulcers. It works by forming a protective barrier over the ulcer against acid and enzymes.",
-        "alternatives":[],
+        "price_in_inr": 56,
+        "alternatives": [
+            { "name": "Sucrafil", "price_in_inr": 56 },
+            { "name": "Sucramal", "price_in_inr": 49 }
+        ],
         "home_remedies_for_common_uses": {
             "For Ulcers": "Avoid smoking, alcohol, and NSAIDs. Manage stress."
         },
@@ -452,7 +565,11 @@ def get_dataset_alt():
     },
     "benazepril": {
         "description": "An angiotensin-converting enzyme (ACE) inhibitor used to treat high blood pressure and heart failure.",
-        "alternatives":[],
+        "price_in_inr": 85,
+        "alternatives": [
+            { "name": "Benace 5", "price_in_inr": 85 },
+            { "name": "Aceptor 10", "price_in_inr": 120 }
+        ],
         "home_remedies_for_common_uses": {
             "For Hypertension": "A low-sodium diet, regular exercise, and weight management."
         },
@@ -460,7 +577,11 @@ def get_dataset_alt():
     },
     "hydrochlorothiazide": {
         "description": "A thiazide diuretic ('water pill') used to treat high blood pressure and edema (fluid retention).",
-        "alternatives":[],
+        "price_in_inr": 11,
+        "alternatives": [
+            { "name": "Aquazide 12.5", "price_in_inr": 11 },
+            { "name": "Hydrazide 25", "price_in_inr": 17 }
+        ],
         "home_remedies_for_common_uses": {
             "For Edema/Hypertension": "Reducing sodium intake is very effective in conjunction with this medication."
         },
@@ -468,7 +589,11 @@ def get_dataset_alt():
     },
     "valsartan": {
         "description": "An angiotensin II receptor blocker (ARB) used to treat high blood pressure and heart failure.",
-        "alternatives":[],
+        "price_in_inr": 95,
+        "alternatives": [
+            { "name": "Valzaar 40", "price_in_inr": 95 },
+            { "name": "Valent 160", "price_in_inr": 288 }
+        ],
         "home_remedies_for_common_uses": {
             "For Hypertension": "Lifestyle modifications including diet (low sodium), exercise, and stress reduction."
         },
@@ -476,18 +601,22 @@ def get_dataset_alt():
     },
     "glipizide": {
         "description": "A sulfonylurea drug used to control high blood sugar in people with type 2 diabetes. It works by stimulating the pancreas to release insulin.",
-        "alternatives":[],
+        "price_in_inr": 13,
+        "alternatives": [
+            { "name": "Glynase XL 5", "price_in_inr": 13 },
+            { "name": "Glizid M (Combination with Metformin)", "price_in_inr": 112 }
+        ],
         "home_remedies_for_common_uses": {
             "For Type 2 Diabetes": "Diet and exercise are essential components of management."
         },
         "notes": "Prescription-only. Carries a risk of hypoglycemia (low blood sugar). Can cause weight gain."
     },
     "glyburide": {
-        "description": "A sulfonylurea drug used to treat type 2 diabetes by stimulating insulin release from the pancreas.",
+        "description": "A sulfonylurea drug used to treat type 2 diabetes by stimulating insulin release from the pancreas (known as Glibenclamide in India).",
+        "price_in_inr": 10,
         "alternatives": [
-            "Metformin",
-            "Glipizide",
-            "GLP-1 agonists (Liraglutide)"
+            { "name": "Daonil 2.5", "price_in_inr": 4 },
+            { "name": "Glinil-M (Glibenclamide + Metformin)", "price_in_inr": 22 }
         ],
         "home_remedies_for_common_uses": {
             "For Type 2 Diabetes": "A consistent diet and regular physical activity are crucial for blood sugar control."
@@ -496,7 +625,11 @@ def get_dataset_alt():
     },
     "liraglutide": {
         "description": "A GLP-1 receptor agonist, administered by injection, used to treat type 2 diabetes and, at a higher dose, for weight management.",
-        "alternatives":[],
+        "price_in_inr": 3500,
+        "alternatives": [
+            { "name": "Victoza (Novo Nordisk)", "price_in_inr": 3500 },
+            { "name": "Lirafit (Glenmark)", "price_in_inr": 1600 }
+        ],
         "home_remedies_for_common_uses": {
             "For Diabetes/Weight Management": "Must be used in conjunction with a reduced-calorie diet and increased physical activity."
         },
@@ -504,7 +637,12 @@ def get_dataset_alt():
     },
     "semaglutide": {
         "description": "A GLP-1 receptor agonist used to treat type 2 diabetes and for chronic weight management. Available as a weekly injection or a daily oral tablet.",
-        "alternatives":[],
+        "price_in_inr": 3100,
+        "alternatives": [
+            { "name": "Rybelsus 3mg (Oral)", "price_in_inr": 2700 },
+            { "name": "Wegovy 0.25mg (Injection)", "price_in_inr": 9500 },
+            { "name": "Ozempic 0.25mg (Injection)", "price_in_inr": 10000 }
+        ],
         "home_remedies_for_common_uses": {
             "For Diabetes/Weight Management": "A healthy diet and regular exercise are necessary for the medication to be effective."
         },
@@ -512,7 +650,12 @@ def get_dataset_alt():
     },
     "sitagliptin": {
         "description": "A DPP-4 inhibitor used to treat type 2 diabetes. It works by increasing levels of incretin hormones, which help control blood sugar.",
-        "alternatives":[],
+        "price_in_inr": 105,
+        "alternatives": [
+            { "name": "Istavel 50", "price_in_inr": 105 },
+            { "name": "Sitaxa 50", "price_in_inr": 193 },
+            { "name": "Januvia 50", "price_in_inr": 222 }
+        ],
         "home_remedies_for_common_uses": {
             "For Type 2 Diabetes": "Diet and exercise are fundamental to treatment."
         },
@@ -520,7 +663,12 @@ def get_dataset_alt():
     },
     "amitriptyline": {
         "description": "A tricyclic antidepressant (TCA) used to treat depression. It is also used off-label at lower doses for nerve pain and migraine prevention.",
-        "alternatives":[],
+        "price_in_inr": 25,
+        "alternatives": [
+            { "name": "Tryptomer 10", "price_in_inr": 76 },
+            { "name": "Amitone 10", "price_in_inr": 20 },
+            { "name": "Eliwel 10", "price_in_inr": 25 }
+        ],
         "home_remedies_for_common_uses": {
             "For Depression/Pain": "Psychotherapy, exercise, and stress management techniques."
         },
@@ -528,7 +676,12 @@ def get_dataset_alt():
     },
     "aripiprazole": {
         "description": "An atypical antipsychotic used to treat schizophrenia, bipolar disorder, and as an add-on treatment for depression.",
-        "alternatives":[],
+        "price_in_inr": 95,
+        "alternatives": [
+            { "name": "Arpizol 5", "price_in_inr": 95 },
+            { "name": "Asprito 5", "price_in_inr": 76 },
+            { "name": "Aripiren 5", "price_in_inr": 54 }
+        ],
         "home_remedies_for_common_uses": {
             "General Support for Mental Health": "Therapy, support groups, and a structured daily routine."
         },
@@ -536,7 +689,12 @@ def get_dataset_alt():
     },
     "bupropion": {
         "description": "An atypical antidepressant also used for smoking cessation. It works by affecting the neurotransmitters norepinephrine and dopamine.",
-        "alternatives":[],
+        "price_in_inr": 176,
+        "alternatives": [
+            { "name": "Bupron SR 150", "price_in_inr": 176 },
+            { "name": "Zupion SR", "price_in_inr": 142 },
+            { "name": "Bupep SR 150", "price_in_inr": 137 }
+        ],
         "home_remedies_for_common_uses": {
             "For Depression": "Cognitive-behavioral therapy, exercise, and mindfulness.",
             "For Smoking Cessation": "Behavioral counseling and support groups."
@@ -545,7 +703,12 @@ def get_dataset_alt():
     },
     "buspirone": {
         "description": "A non-benzodiazepine anxiolytic used for the treatment of generalized anxiety disorder (GAD).",
-        "alternatives":[],
+        "price_in_inr": 68,
+        "alternatives": [
+            { "name": "Buspin 10", "price_in_inr": 68 },
+            { "name": "Buspinet 10", "price_in_inr": 36 },
+            { "name": "Biziron 10", "price_in_inr": 50 }
+        ],
         "home_remedies_for_common_uses": {
             "For Anxiety": "Therapy (CBT), meditation, deep breathing exercises, and regular physical activity."
         },
@@ -553,7 +716,12 @@ def get_dataset_alt():
     },
     "citalopram": {
         "description": "A selective serotonin reuptake inhibitor (SSRI) used to treat depression.",
-        "alternatives":[],
+        "price_in_inr": 85,
+        "alternatives": [
+            { "name": "Citalin 20", "price_in_inr": 85 },
+            { "name": "Citopam 20", "price_in_inr": 72 },
+            { "name": "Celepra 20", "price_in_inr": 94 }
+        ],
         "home_remedies_for_common_uses": {
             "For Depression": "Psychotherapy, exercise, and maintaining a healthy lifestyle."
         },
@@ -561,26 +729,38 @@ def get_dataset_alt():
     },
     "clonazepam": {
         "description": "A long-acting benzodiazepine used to treat seizures, panic disorder, and anxiety.",
-        "alternatives":[],
+        "price_in_inr": 45,
+        "alternatives": [
+            { "name": "Clonotril 0.5", "price_in_inr": 52 },
+            { "name": "Zapiz 0.5", "price_in_inr": 45 },
+            { "name": "Petril 0.5", "price_in_inr": 58 }
+        ],
         "home_remedies_for_common_uses": {
             "For Anxiety": "Stress management techniques and therapy."
         },
-        "notes": "Prescription-only, Schedule IV controlled substance. Carries risks of dependence, tolerance, and withdrawal. Its long half-life can lead to next-day drowsiness."
+        "notes": "Prescription-only, Schedule IV/H1 controlled substance. Carries risks of dependence, tolerance, and withdrawal. Its long half-life can lead to next-day drowsiness."
     },
     "diazepam": {
         "description": "A long-acting benzodiazepine used to treat anxiety, seizures, muscle spasms, and symptoms of alcohol withdrawal.",
+        "price_in_inr": 18,
         "alternatives": [
-            "Other benzodiazepines (Clonazepam, Lorazepam)",
-            "Muscle relaxants (Cyclobenzaprine) for spasms"
+            { "name": "Calmpose 5", "price_in_inr": 18 },
+            { "name": "Valium 5", "price_in_inr": 24 },
+            { "name": "Placidox 5", "price_in_inr": 12 }
         ],
         "home_remedies_for_common_uses": {
             "For Anxiety/Muscle Spasms": "Relaxation techniques, physical therapy."
         },
-        "notes": "Prescription-only, Schedule IV controlled substance. High potential for dependence. Long half-life can cause accumulation and prolonged sedation, especially in the elderly."
+        "notes": "Prescription-only, Schedule IV/H1 controlled substance. High potential for dependence. Long half-life can cause accumulation and prolonged sedation, especially in the elderly."
     },
     "duloxetine": {
         "description": "A serotonin-norepinephrine reuptake inhibitor (SNRI) used to treat depression, anxiety, nerve pain, and fibromyalgia.",
-        "alternatives":[],
+        "price_in_inr": 145,
+        "alternatives": [
+            { "name": "Duvanta 20", "price_in_inr": 145 },
+            { "name": "Symbal 20", "price_in_inr": 158 },
+            { "name": "Delok 20", "price_in_inr": 112 }
+        ],
         "home_remedies_for_common_uses": {
             "For Depression/Pain": "A combination of medication with therapy, physical activity, and stress reduction is most effective."
         },
@@ -588,7 +768,12 @@ def get_dataset_alt():
     },
     "escitalopram": {
         "description": "A selective serotonin reuptake inhibitor (SSRI) used to treat depression and generalized anxiety disorder.",
-        "alternatives":[],
+        "price_in_inr": 95,
+        "alternatives": [
+            { "name": "Nexito 10", "price_in_inr": 105 },
+            { "name": "Cilentra 10", "price_in_inr": 95 },
+            { "name": "Stalopam 10", "price_in_inr": 110 }
+        ],
         "home_remedies_for_common_uses": {
             "For Depression/Anxiety": "Therapy (CBT), mindfulness, exercise, and a stable routine."
         },
@@ -596,41 +781,63 @@ def get_dataset_alt():
     },
     "lamotrigine": {
         "description": "An anticonvulsant medication also used as a mood stabilizer in bipolar disorder.",
-        "alternatives":[],
+        "price_in_inr": 185,
+        "alternatives": [
+            { "name": "Lamictal 50", "price_in_inr": 245 },
+            { "name": "Lametec DT 50", "price_in_inr": 185 },
+            { "name": "Lamoset 50", "price_in_inr": 156 }
+        ],
         "home_remedies_for_common_uses": {
-            "General Support for Bipolar/Epilepsy": "Maintaining a regular sleep schedule, managing stress, and avoiding alcohol and recreational drugs."
+            "General Support for Bipolar/Epilepsy": "Maintaining a regular sleep schedule, managing stress, and avoiding alcohol."
         },
         "notes": "Prescription-only. Requires a very slow dose titration when starting to reduce the risk of a serious, potentially life-threatening skin rash (Stevens-Johnson syndrome)."
     },
     "levetiracetam": {
         "description": "An anticonvulsant medication used to treat various types of seizures.",
-        "alternatives":[],
+        "price_in_inr": 138,
+        "alternatives": [
+            { "name": "Levipil 500", "price_in_inr": 145 },
+            { "name": "Keppra 500", "price_in_inr": 750 },
+            { "name": "Levera 500", "price_in_inr": 138 }
+        ],
         "home_remedies_for_common_uses": {
-            "For Epilepsy": "Ensuring adequate sleep, managing stress, and avoiding known seizure triggers (like flashing lights for some individuals)."
+            "For Epilepsy": "Ensuring adequate sleep, managing stress, and avoiding known seizure triggers."
         },
         "notes": "Prescription-only. Generally well-tolerated but can cause behavioral side effects like irritability, agitation, and mood swings."
     },
     "lorazepam": {
         "description": "An intermediate-acting benzodiazepine used to treat anxiety, insomnia, and seizures.",
-        "alternatives":[],
+        "price_in_inr": 35,
+        "alternatives": [
+            { "name": "Ativan 1", "price_in_inr": 42 },
+            { "name": "Larpose 1", "price_in_inr": 35 },
+            { "name": "Lopez 1", "price_in_inr": 28 }
+        ],
         "home_remedies_for_common_uses": {
             "For Anxiety/Insomnia": "Cognitive-behavioral therapy for insomnia (CBT-I), relaxation techniques, and good sleep hygiene."
         },
-        "notes": "Prescription-only, Schedule IV controlled substance. Carries risks of dependence, tolerance, and withdrawal. Often used in hospital settings for sedation."
+        "notes": "Prescription-only, Schedule IV/H1 controlled substance. Carries risks of dependence, tolerance, and withdrawal. Often used in hospital settings for sedation."
     },
     "olanzapine": {
         "description": "An atypical antipsychotic used to treat schizophrenia and bipolar disorder.",
-        "alternatives":[],
+        "price_in_inr": 62,
+        "alternatives": [
+            { "name": "Oleanz 5", "price_in_inr": 75 },
+            { "name": "Olan 5", "price_in_inr": 62 },
+            { "name": "Joyゾー (Joyzo) 5", "price_in_inr": 55 }
+        ],
         "home_remedies_for_common_uses": {
             "General Support for Mental Health": "A supportive environment, therapy, and a consistent daily routine."
         },
-        "notes": "Prescription-only. Associated with significant metabolic side effects, including weight gain, high blood sugar, and high cholesterol, requiring regular monitoring."
+        "notes": "Prescription-only. Associated with significant metabolic side effects, including weight gain, high blood sugar, and high cholesterol."
     },
     "topiramate": {
         "description": "An anticonvulsant medication also used for migraine prevention and sometimes for weight loss in combination with another drug.",
+        "price_in_inr": 124,
         "alternatives": [
-            "Other anticonvulsants (for seizures)",
-            "Other migraine preventatives (Propranolol, Amitriptyline)"
+            { "name": "Topaz 25", "price_in_inr": 135 },
+            { "name": "Topirol 25", "price_in_inr": 124 },
+            { "name": "Topamac 25", "price_in_inr": 160 }
         ],
         "home_remedies_for_common_uses": {
             "For Migraines": "Identifying and avoiding triggers, maintaining a regular sleep and meal schedule, and stress management."
@@ -639,7 +846,11 @@ def get_dataset_alt():
     },
     "bacitracin": {
         "description": "A polypeptide antibiotic used topically to prevent minor skin infections in cuts, scrapes, and burns.",
-        "alternatives":[],
+        "price_in_inr": 95,
+        "alternatives": [
+            { "name": "Bacitracin Ointment (Generic)", "price_in_inr": 95 },
+            { "name": "Neosporin (Triple Antibiotic)", "price_in_inr": 115 }
+        ],
         "home_remedies_for_common_uses": {
             "For Minor Wounds": "Clean the wound thoroughly with soap and water, apply the antibiotic, and cover with a sterile bandage."
         },
@@ -647,7 +858,12 @@ def get_dataset_alt():
     },
     "cephalexin": {
         "description": "A first-generation cephalosporin antibiotic used to treat a variety of bacterial infections, particularly skin and soft tissue infections.",
-        "alternatives":[],
+        "price_in_inr": 115,
+        "alternatives": [
+            { "name": "Phexin 500", "price_in_inr": 155 },
+            { "name": "Ceff 500", "price_in_inr": 115 },
+            { "name": "Sporidex 500", "price_in_inr": 195 }
+        ],
         "home_remedies_for_common_uses": {
             "General Support for Infections": "Rest, hydration, and completing the full course of medication."
         },
@@ -655,45 +871,56 @@ def get_dataset_alt():
     },
     "clindamycin": {
         "description": "A lincosamide antibiotic used to treat a wide range of serious bacterial infections, including skin, lung, and internal organ infections.",
-        "alternatives":[],
+        "price_in_inr": 215,
+        "alternatives": [
+            { "name": "Dalacin C 300", "price_in_inr": 485 },
+            { "name": "Clindac 300", "price_in_inr": 215 },
+            { "name": "Cleocin (Global Brand)", "price_in_inr": 950 }
+        ],
         "home_remedies_for_common_uses": {
             "General Support for Infections": "Adequate rest and fluid intake."
         },
-        "notes": "Prescription-only. Carries a boxed warning for a high risk of causing Clostridioides difficile-associated diarrhea, which can be severe."
+        "notes": "Prescription-only. Carries a boxed warning for a high risk of causing C. difficile-associated diarrhea, which can be severe."
     },
     "doxycycline": {
         "description": "A tetracycline antibiotic used to treat bacterial infections, malaria, acne, and rosacea.",
+        "price_in_inr": 24,
         "alternatives": [
-            "Minocycline (for acne)",
-            "Azithromycin (for respiratory infections)",
-            "Amoxicillin"
+            { "name": "Doxy-1 LDR", "price_in_inr": 115 },
+            { "name": "Doxivital", "price_in_inr": 24 },
+            { "name": "Tetradox", "price_in_inr": 48 }
         ],
         "home_remedies_for_common_uses": {
             "For Acne": "A consistent skincare routine with gentle cleansers and non-comedogenic moisturizers."
         },
-        "notes": "Prescription-only. Should be taken with a full glass of water and the patient should remain upright for at least 30 minutes to prevent esophageal irritation. Causes significant sun sensitivity. Not recommended for children under 8 or pregnant women."
+        "notes": "Prescription-only. Should be taken with a full glass of water. Causes significant sun sensitivity. Not recommended for children under 8."
     },
     "metronidazole": {
-        "description": "A nitroimidazole antibiotic and antiprotozoal used to treat bacterial and protozoal infections, such as C. difficile, bacterial vaginosis, and giardiasis.",
+        "description": "A nitroimidazole antibiotic and antiprotozoal used to treat bacterial and protozoal infections.",
+        "price_in_inr": 15,
         "alternatives": [
-            "Vancomycin (for C. difficile)",
-            "Clindamycin (for bacterial vaginosis)"
+            { "name": "Flagyl 400", "price_in_inr": 22 },
+            { "name": "Metrogyl 400", "price_in_inr": 15 },
+            { "name": "Aristogyl 400", "price_in_inr": 12 }
         ],
         "home_remedies_for_common_uses": {
             "General Support for Infections": "Completing the full course of medication."
         },
-        "notes": "Prescription-only. Alcohol must be strictly avoided during treatment and for at least 3 days after, as it can cause a severe reaction (nausea, vomiting, flushing). Can cause a metallic taste in the mouth."
+        "notes": "Prescription-only. Alcohol must be strictly avoided during treatment and for 3 days after. Can cause a metallic taste."
     },
     "terbinafine": {
-        "description": "An allylamine antifungal used to treat fungal infections of the skin (athlete's foot, ringworm) and nails. Available as a topical (OTC) and oral tablet (prescription).",
+        "description": "An allylamine antifungal used to treat fungal infections of the skin and nails.",
+        "price_in_inr": 285,
         "alternatives": [
-            "Clotrimazole or Miconazole (topical)",
-            "Itraconazole or Fluconazole (oral, for nail fungus)"
+            { "name": "Sebifin 250", "price_in_inr": 315 },
+            { "name": "Terbiforce 250", "price_in_inr": 285 },
+            { "name": "Tyza 250", "price_in_inr": 250 }
         ],
         "home_remedies_for_common_uses": {
-            "For Fungal Infections": "Keep skin clean and dry, wear breathable footwear and clean socks."
+            "For Fungal Infections": "Keep skin clean and dry, wear breathable footwear."
         },
         "notes": "Oral terbinafine can cause liver problems and requires monitoring. It can also cause disturbances in taste and smell."
-        }
     }
+}
+
     return ALTERNATIVE_KNOWLEDGE_BASE
