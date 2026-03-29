@@ -111,9 +111,13 @@ with col2:
     else:
         st.info("Results of automated extraction will appear here.")
 
-med_input_default = st.session_state.analysis_results.get('ner_results', {}).get("Medication", [""])[0]
-symptom_input_default = st.session_state.analysis_results.get('ner_results', {}).get("Symptoms", [""])[0]
-dosage_input_default = st.session_state.analysis_results.get('ner_results', {}).get("Dosage", [""])[0]
+# Extract nested NER results safely
+ner_results = st.session_state.analysis_results.get('ner_results', {})
+
+# Use a helper to get the first item if it exists, otherwise use an empty string
+med_input_default = ner_results.get("Medication", [""])[0] if ner_results.get("Medication") else ""
+symptom_input_default = ner_results.get("Symptoms", [""])[0] if ner_results.get("Symptoms") else ""
+dosage_input_default = ner_results.get("Dosage", [""])[0] if ner_results.get("Dosage") else ""
 
 # 2. AI DRUG INTERACTIONS
 st.divider()
