@@ -1,32 +1,57 @@
-# Ignore Python cache & bytecode
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.db
-*.sqlite3
-
-# Ignore virtual environments
+# --- Python & Dependencies ---
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+**/.ipynb_checkpoints/
 venv/
-.env
-*.env
+.venv/
+env/
+# Ignore local installed packages
+**/site-packages/
 
-# Ignore test files & logs
+# --- Environment & Secrets ---
+# Crucial: Never include actual secrets in your image
+.env
+.env.local
+.env.*
+!.env.example
+# Google Cloud Service Account Keys
+**/*.json
+!datasets/*.json # Only if you have non-secret JSON in datasets
+
+# --- Git & Version Control ---
+.git/
+.gitignore
+.dockerignore
+.gitattributes
+
+# --- Project Metadata & IDEs ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# --- Docker & CI/CD ---
+docker-compose.yml
+render.yaml
+Dockerfile
+**/Dockerfile
+
+# --- Build & Temporary Artifacts ---
+build/
+dist/
+*.egg-info/
 *.log
 *.out
 *.err
-*.tmp
-*.swp
+tmp/
+temp/
 
-# Ignore git stuff
-.git
-.gitignore
-
-# Ignore Docker-related files
-Dockerfile
-docker-compose.yml
-.dockerignore
-
-# Ignore system files
-.DS_Store
-Thumbs.db
+# Application Logs
+backend/logs/
+backend/medify_debug.log
+*.log

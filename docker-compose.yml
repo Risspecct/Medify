@@ -6,13 +6,13 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/code/backend:cached
-      - ./datasets/dosage.csv:/code/datasets/dosage.csv:cached
+      - ./backend:/app:cached
+      - ./datasets:/app/datasets:cached
     environment:
-      - DOSAGE_FILE_PATH=/code/datasets/dosage.csv
+      - DOSAGE_FILE_PATH=/app/datasets/dosage.csv
       - GENAI_API_KEY=${GENAI_API_KEY}
       - GEMINI_MODEL_ID=${GEMINI_MODEL_ID}
-    working_dir: /code/backend
+    working_dir: /app
     command: uvicorn main:app --host 0.0.0.0 --port 8000
 
   frontend:
