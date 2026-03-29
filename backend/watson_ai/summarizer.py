@@ -53,6 +53,6 @@ def summarize_text(request: SummaryRequest):
         duration = time.time() - start_time
         logger.info(f"AI Summary Success | Latency: {duration:.2f}s")
         return response
-    except Exception:
+    except Exception as e:
         logger.error(f"AI Summary Failed | Error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=502, detail="AI service error; check server logs for details.")

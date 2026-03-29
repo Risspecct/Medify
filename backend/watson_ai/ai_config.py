@@ -5,7 +5,7 @@ import os
 try:
     import google.generativeai as genai
 except Exception:
-    genai = None
+    raise RuntimeError("google-generative-ai package not found. Install it to use AI features.")
 
 # Load env vars
 load_dotenv()
@@ -20,6 +20,7 @@ if not GENAI_API_KEY:
 # Configure client
 genai.configure(api_key=GENAI_API_KEY)
 
+
 class GeminiModel:
     def __init__(self, model_id: str = "gemini-2.5-flash"):
         # Hard‑coded default model
@@ -28,6 +29,7 @@ class GeminiModel:
     def generate_text(self, prompt: str) -> str:
         resp = self.model.generate_content(prompt)
         return getattr(resp, "text", str(resp))
+
 
 # Expose a single instance
 gemini_model = GeminiModel()
