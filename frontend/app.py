@@ -211,51 +211,63 @@ if st.session_state.dosage_result:
     else:
         st.warning(f"Could not find valid dosage information for **'{st.session_state.get('dosage_med_input', '')}'**.")
 
-# 5. ALTERNATIVE REMEDIES
+# 5. ALTERNATIVE REMEDIES & COST COMPARISON
 st.divider()
-st.header("5. Find Alternative Remedies & OTC Options")
-st.markdown("Get suggestions for alternative medications and home remedies for a given drug.")
+st.header("5. Find Alternative Remedies & Cost Comparison")
+st.markdown("Compare drug costs and find home remedies from our knowledge base.")
+
 alt_med_input = st.text_input("Medication Name", value=med_input_default, key="alt_med_input")
-if st.button("Find Alternatives", use_container_width=True, key="alt_button"):
+
+if st.button("Find Alternatives & Compare Cost", use_container_width=True, key="alt_button"):
     if alt_med_input:
+        # Calls the logic to find alternatives and calculate savings
         recommendations = alternative.find_alternatives(alt_med_input)
         st.session_state.recommendations = recommendations
         st.session_state.analysis_results['alternatives_report'] = recommendations
 
-# --- THIS IS THE CORRECTED AND FINAL UI LOGIC FOR ALTERNATIVES ---
 if st.session_state.get('recommendations'):
-    recommendations = st.session_state.recommendations
+    recs = st.session_state.recommendations
+    base_price = recs.get('price_in_inr', 0)
+
     with st.container(border=True):
-        st.markdown(f"#### 💡 Alternatives & Remedies for **{alt_med_input.capitalize()}**")
-        st.markdown(f"*{recommendations.get('description', '')}*")
+        st.markdown(f"#### 💡 Analysis for **{alt_med_input.capitalize()}**")
+        st.write(f"*{recs.get('description', '')}*")
+
+        # Display Original Price as a Metric
+        st.metric(label="Current Medication Price", value=f"₹{base_price}")
         st.divider()
 
-        alt_rec_col1, alt_rec_col2 = st.columns(2)
-        with alt_rec_col1:
-            st.subheader("💊 Medication Alternatives")
-            alts = recommendations.get('alternatives', [])
+        alt_col, remedy_col = st.columns(2)
+
+        with alt_col:
+            st.subheader("💊 Lower-Cost Alternatives")
+            alts = recs.get('alternatives', [])
             if alts:
                 for alt in alts:
-                    if '(' in alt:
-                        name, desc = alt.split('(', 1)
-                        st.markdown(f"**{name.strip()}**")
-                        st.caption(f"({desc.strip()}")
-                    else:
-                        st.markdown(f"**{alt.strip()}**")
+                    alt_name = alt.get('name')
+                    alt_price = alt.get('price_in_inr')
+                    # Savings percentage calculated in the alternative.py feature
+                    savings = alt.get('savings_percentage', 0)
+
+                    with st.expander(f"**{alt_name}**"):
+                        c1, c2 = st.columns(2)
+                        c1.metric("Price", f"₹{alt_price}")
+                        # Green delta indicates savings
+                        c2.metric("Savings", f"{savings}%", delta=f"{savings}%" if savings > 0 else None)
             else:
-                st.markdown("No specific medication alternatives listed.")
-        with alt_rec_col2:
+                st.info("No alternative medications listed.")
+
+        with remedy_col:
             st.subheader("🌿 Home Remedies")
-            remedies = recommendations.get('home_remedies_for_common_uses', {})
+            remedies = recs.get('home_remedies_for_common_uses', {})
             if remedies:
-                for use, remedy in remedies.items():
-                    st.markdown(f"**{use}:** {remedy}")
+                for condition, remedy in remedies.items():
+                    st.markdown(f"**{condition}:** {remedy}")
             else:
-                st.markdown("No specific home remedies listed.")
+                st.info("No specific home remedies listed.")
+
         st.divider()
-        st.warning(f"**⚠️ Important Notes:** {recommendations.get('notes', '')}")
-elif st.session_state.get('recommendations') is False:
-    st.info(f"No specific alternatives found for '{alt_med_input}' in our knowledge base.")
+        st.warning(f"**⚠️ Important Notes:** {recs.get('notes', '')}")
 
 # 6. AI-POWERED SUMMARY
 st.divider()
