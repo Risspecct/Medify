@@ -1,3 +1,57 @@
-venv
-__pycache__
+# --- System Files ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# --- Python ---
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+dist/
+build/
+
+# --- Virtual Environments ---
+venv/
+.venv/
+env/
+ENV/
+bin/
+lib64/
+lib/
+include/
+share/
+
+#  Environment Variables & Secrets 
 .env
+.env.local
+.env.*
+!.env.example
+
+*.json
+
+secrets.toml
+
+# --- Application Logs  ---
+backend/logs/
+backend/medify_debug.log
+*.log
+*.out
+*.err
+
+.cache/
+**/models/
+**/hub/
+
+# --- IDEs ---
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# --- Docker Artifacts ---
+docker-compose.override.yml
