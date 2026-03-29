@@ -1,10 +1,12 @@
+import time
 from typing import Any
 from pydantic import BaseModel
 from watson_ai import ai_config
 from fastapi import HTTPException
-import logging
+from logger_config import setup_logger
 
-logger = logging.getLogger(__name__)
+logger = setup_logger("AI_Summarizer")
+
 
 class SummaryRequest(BaseModel):
     outputs: list[dict[str, Any]]
@@ -39,15 +41,18 @@ def refine_input(request) -> str:
     return "\n\n".join(texts)
 
 
-
 def summarize_text(request: SummaryRequest):
+    start_time = time.time()
     """
     Summarize the input text using the Gemini model.
     """
+    logger.info(f"Received summarization request for {len(request.outputs)} items.")
     prompt = text + refine_input(request)
     try:
         response = ai_config.gemini_model.generate_text(prompt)
+        duration = time.time() - start_time
+        logger.info(f"AI Summary Success | Latency: {duration:.2f}s")
         return response
-    except Exception as e:
-        logger.exception("AI service error in summarize_text")
+    except Exception:
+        logger.error(f"AI Summary Failed | Error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=502, detail="AI service error; check server logs for details.")

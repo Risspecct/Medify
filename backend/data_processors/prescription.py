@@ -3,7 +3,9 @@ import re
 from typing import Dict, Any
 from dotenv import load_dotenv
 import os
+from logger_config import setup_logger
 
+logger = setup_logger("Safety_Engine")
 
 load_dotenv()
 
@@ -33,6 +35,7 @@ def _check_age(medicine_info: pd.Series, age_in_months: int, report: Dict[str, A
 
     if pd.notna(min_age) and pd.notna(max_age):
         if not min_age <= age_in_months <= max_age:
+            logger.warning(f"AGE MISMATCH | Drug: {medicine_info['drug_generic']} | Patient Age: {age_in_months}mo | Range: {min_age}-{max_age}mo")
             report["age_check"] = (
                 f"Fail: Age {age_in_months} months is outside the recommended range "
                 f"({min_age}-{max_age} months)."
@@ -81,6 +84,7 @@ def _check_dosage(medicine_info: pd.Series, given_dose: float, medicine_name: st
         else:
             report["dosage_check"] = f"Fail: Given dose of {given_dose:.2f} mg/kg exceeds the maximum recommended dose of {max_dose} mg/kg."
         report["notes"].append(f"Maximum recommended dose for {medicine_name.capitalize()}: {max_dose} mg/kg.")
+        logger.critical(f"OVERDOSE DETECTED | Drug: {medicine_name} | Given: {given_dose}mg/kg | Max: {max_dose}mg/kg")
 
 
 def get_report(symptom: str, medicine_name: str, age_in_months: int, given_dosage_mg_per_kg: float) -> Dict[str, Any]:
@@ -96,6 +100,7 @@ def get_report(symptom: str, medicine_name: str, age_in_months: int, given_dosag
     Returns:
         A structured verification report.
     """
+    logger.info(f"Verifying prescription: {medicine_name} for {symptom}.")
     report = {
         "symptom_check": "Pending",
         "age_check": "Pending",
