@@ -1,31 +1,38 @@
+version: '3.8'
+
 services:
   backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
+    container_name: medify-backend
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/app:cached
-      - ./datasets:/app/datasets:cached
     environment:
-      - DOSAGE_FILE_PATH=/app/datasets/dosage.csv
+      # Paths
+      - DOSAGE_FILE_PATH=/app/backend/datasets/dosage.csv
+      # API Keys (Reads from your local .env file)
       - GENAI_API_KEY=${GENAI_API_KEY}
       - GEMINI_MODEL_ID=${GEMINI_MODEL_ID}
-    working_dir: /app
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
+      - GCP_SERVICE_ACCOUNT_JSON=${GCP_SERVICE_ACCOUNT_JSON}
+    volumes:
+      # Optional: Hot-reloading locally
+      - ./backend:/app/backend:cached
+    restart: unless-stopped
 
   frontend:
     build:
       context: .
       dockerfile: frontend/Dockerfile
+    container_name: medify-frontend
     ports:
       - "8501:8501"
-    volumes:
-      - ./frontend:/app/frontend:cached
-      - ./datasets:/app/datasets:cached
     environment:
+      # Points internally to the backend container via Docker's DNS
       - FAST_API_URL=http://backend:8000
-      - GCP_SERVICE_ACCOUNT_JSON=${GCP_SERVICE_ACCOUNT_JSON}
+    volumes:
+      # Optional: Hot-reloading locally
+      - ./frontend:/app/frontend:cached
     depends_on:
       - backend
+    restart: unless-stopped
