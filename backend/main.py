@@ -6,6 +6,7 @@ from routers.ai_router import router as ai_router
 from routers.ocr_router import router as ocr_router
 from routers.ner_router import router as ner_router
 from routers.alt_router import router as alt_router
+from routers.prediction_router import router as prediction_router
 import uvicorn
 import logging
 from data_processors.prescription import dosage_file_path
@@ -27,6 +28,7 @@ app.include_router(ai_router, prefix="/ai", tags=["AI Services"])
 app.include_router(ocr_router, prefix="/ocr", tags=["OCR Services"])
 app.include_router(ner_router, prefix="/ner", tags=["NER Services"])
 app.include_router(alt_router, prefix="/alternatives", tags=["Alternative Medications"])
+app.include_router(prediction_router, prefix="/prediction", tags=["Disease Prediction"])
 
 
 @app.on_event("startup")
