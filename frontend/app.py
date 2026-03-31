@@ -1,402 +1,433 @@
 import os
 import requests
-import streamlit as st
-import pandas as pd
-from dotenv import load_dotenv
 import re
+import streamlit as st
+from dotenv import load_dotenv
 
-# Load environment variables
+# -----------------------------------------------------------------------------
+# 1. SETUP & CONFIGURATION
+# -----------------------------------------------------------------------------
 load_dotenv()
 API_BASE_URL = os.getenv("FAST_API_URL", "http://backend:8000")
 
-# -----------------------------------------------------------------------------
-# PAGE CONFIGURATION & THEME
-# -----------------------------------------------------------------------------
 st.set_page_config(
-    page_title="Medify Dashboard",
+    page_title="Medify AI",
     page_icon="⚕️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for sleek look
+# -----------------------------------------------------------------------------
+# 2. ADAPTIVE PREMIUM CSS STYLING (Works in Light & Dark Mode)
+# -----------------------------------------------------------------------------
 st.markdown("""
     <style>
-    .stButton > button { border-radius: 8px; font-weight: bold; }
-    .stMetric { background-color: #f8f9fa; padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .css-1d391kg { padding-top: 1rem; }
-    </style>
-    """, unsafe_allow_html=True)
+    /* Hide Streamlit default headers and footers to look like a real app */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
 
-# -----------------------------------------------------------------------------
-# SESSION STATE INITIALIZATION
-# -----------------------------------------------------------------------------
-if 'shared_data' not in st.session_state:
-    st.session_state.shared_data = {
-        'extracted_text': '',
-        'ner_results': {},
-        'verify_results': {},
-        'dosage_results': {},
-        'interaction_results': '',
-        'prediction_results': [],
-        'alt_results': {}
+    /* Typography adjustments */
+    .stApp {
+        font-family: 'Inter', -apple-system, sans-serif;
     }
 
+    /* Premium Button Styling - Theme Agnostic */
+    .stButton > button {
+        background-color: #0f766e !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+        padding: 0.6rem 1.2rem !important;
+        font-weight: 600 !important;
+        border: none !important;
+        box-shadow: 0 4px 6px -1px rgba(15, 118, 110, 0.2) !important;
+        transition: all 0.3s ease !important;
+        width: 100%;
+    }
+    .stButton > button:hover {
+        background-color: #0d9488 !important;
+        box-shadow: 0 8px 12px -1px rgba(15, 118, 110, 0.3) !important;
+        transform: translateY(-2px) !important;
+        color: #ffffff !important;
+    }
+
+    /* Metric Styling (For high visibility outputs) */
+    [data-testid="stMetricValue"] {
+        font-size: 2rem !important;
+        font-weight: 800 !important;
+        color: #0f766e !important; /* Teal stands out in both light/dark */
+    }
+    [data-testid="stMetricLabel"] {
+        font-size: 1.1rem !important;
+        font-weight: 600 !important;
+    }
+
+    /* Pill Tags for Medical Entities - Adaptive for dark/light */
+    .entity-pill {
+        display: inline-block;
+        background-color: rgba(14, 165, 233, 0.15); /* Transparent blue */
+        color: #0ea5e9; /* Bright blue, readable on dark and light */
+        padding: 6px 14px;
+        border-radius: 9999px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin: 4px;
+        border: 1px solid rgba(14, 165, 233, 0.3);
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+def render_pill(text):
+    return f'<span class="entity-pill">{text}</span>'
+
 # -----------------------------------------------------------------------------
-# API HELPER FUNCTIONS
+# 3. API CLIENT FUNCTIONS
 # -----------------------------------------------------------------------------
-def api_post_ocr(file):
+def ocr_extract(file):
     files = {"file": (file.name, file.getvalue(), file.type)}
     res = requests.post(f"{API_BASE_URL}/ocr/extract", files=files)
     res.raise_for_status()
     return res.json()
 
-def api_post_ner(text):
+def ner_parse(text: str):
     res = requests.post(f"{API_BASE_URL}/ner/parse", json={"text": text})
     res.raise_for_status()
     return res.json()
 
-def api_post_predict(symptoms):
+def predict_disease(symptoms: list):
     res = requests.post(f"{API_BASE_URL}/prediction/", json={"symptoms": symptoms})
     res.raise_for_status()
     return res.json()
 
-def api_post_interactions(meds):
+def get_interactions(meds: list):
     res = requests.post(f"{API_BASE_URL}/ai/interactions", json={"medicines": meds})
     res.raise_for_status()
     return res.json()
 
-def api_get_verify(symptom, med_name, age_months, dosage_mg_kg):
-    params = {
-        "symptom": symptom, "medicine_name": med_name, 
-        "age_in_months": age_months, "given_dosage_mg_per_kg": dosage_mg_kg
-    }
+def verify_prescription(symptom, med_name, age_months, dosage_mg_kg):
+    params = {"symptom": symptom, "medicine_name": med_name, "age_in_months": age_months, "given_dosage_mg_per_kg": dosage_mg_kg}
     res = requests.get(f"{API_BASE_URL}/drug_info/verify", params=params)
     res.raise_for_status()
     return res.json()
 
-def api_get_dosage(med_name, age_months):
+def get_dosage(med_name, age_months):
     res = requests.get(f"{API_BASE_URL}/drug_info/dosage/{med_name}/{age_months}")
     res.raise_for_status()
     return res.json()
 
-def api_get_alternatives(med_name):
+def get_alternatives(med_name):
     res = requests.get(f"{API_BASE_URL}/alternatives/{med_name}")
     if res.status_code == 404: return None
     res.raise_for_status()
     return res.json()
 
-def api_post_summary(outputs_list):
+def generate_summary(outputs_list: list):
     res = requests.post(f"{API_BASE_URL}/ai/summarize", json={"outputs": outputs_list})
     res.raise_for_status()
     return res.json()
 
 # -----------------------------------------------------------------------------
-# SIDEBAR NAVIGATION & GLOBAL PATIENT PROFILE
+# 4. SESSION STATE INITIALIZATION
+# -----------------------------------------------------------------------------
+if 'app_data' not in st.session_state:
+    st.session_state.app_data = {
+        'extracted_text': '', 'ner_results': {}, 'prediction_results': [],
+        'interaction_results': '', 'verify_results': {}, 'dosage_results': {}, 'alt_results': {}
+    }
+
+if 'patient_profile' not in st.session_state:
+    st.session_state.patient_profile = {'age_years': 5, 'weight_kg': 20.0}
+
+# -----------------------------------------------------------------------------
+# 5. SIDEBAR NAVIGATION & GLOBAL PROFILE
 # -----------------------------------------------------------------------------
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/2966/2966327.png", width=60)
-    st.title("Medify")
-    st.caption("AI-Powered Prescription Analysis")
+    st.markdown("<h1 style='text-align: center; color: #0f766e;'>⚕️ Medify</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #64748b; font-weight:600;'>Intelligent Medical Assistant</p>", unsafe_allow_html=True)
+    st.write("---")
     
-    st.divider()
-    
-    st.subheader("📌 Navigation")
     menu = st.radio(
-        "Go to",
-        ["Dashboard Overview", 
-         "1. OCR & Information Extraction", 
-         "2. Disease Prediction",
-         "3. Drug Interactions", 
-         "4. Verification & Dosage", 
-         "5. Cost & Alternatives", 
-         "6. AI Final Summary"],
-        label_visibility="collapsed"
+        "Navigation Menu",
+        [
+            "🏠 Dashboard Overview", 
+            "1️⃣ OCR & Extraction", 
+            "2️⃣ Disease Prediction", 
+            "3️⃣ Drug Interactions", 
+            "4️⃣ Verification & Dosage", 
+            "5️⃣ Cost & Alternatives", 
+            "6️⃣ AI Final Summary"
+        ],
+        label_visibility="collapsed",
+        key="main_navigation_radio"
     )
     
-    st.divider()
+    st.write("---")
     
-    st.subheader("👤 Patient Profile")
-    patient_age_yrs = st.number_input("Age (Years)", min_value=0, max_value=120, value=5, step=1)
-    patient_weight_kg = st.number_input("Weight (kg)", min_value=1.0, max_value=200.0, value=20.0, step=0.5)
+    st.markdown("### 👤 Patient Profile")
+    new_age = st.number_input("Age (Years)", min_value=0, max_value=120, value=st.session_state.patient_profile['age_years'], step=1, key="global_sidebar_age")
+    new_weight = st.number_input("Weight (kg)", min_value=1.0, max_value=200.0, value=st.session_state.patient_profile['weight_kg'], step=0.5, key="global_sidebar_weight")
     
-    # Auto-calculated context
-    patient_age_months = patient_age_yrs * 12
-
-# Helper to get default values from NER
-def get_ner_list(key):
-    return st.session_state.shared_data['ner_results'].get(key, [])
-def get_ner_first(key):
-    items = get_ner_list(key)
-    return items[0] if items else ""
+    st.session_state.patient_profile['age_years'] = new_age
+    st.session_state.patient_profile['weight_kg'] = new_weight
 
 # -----------------------------------------------------------------------------
-# MAIN APP ROUTING
+# 6. VIEW RENDERERS (DASHBOARD PAGES)
 # -----------------------------------------------------------------------------
 
-if menu == "Dashboard Overview":
-    st.title("⚕️ Welcome to Medify Dashboard")
-    st.markdown("Your intelligent medical assistant. Navigate through the sidebar to process a prescription step-by-step or jump to specific tools.")
+if menu == "🏠 Dashboard Overview":
+    st.title("⚕️ Welcome to Medify")
+    st.markdown("Your AI-powered prescription companion. Select a step from the sidebar to begin processing.")
     
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.info("**Smart Extraction**\n\nUpload prescriptions to automatically detect drugs, dosages, and symptoms using OCR & NER.")
+        with st.container(border=True):
+            st.markdown("### 📄 Extraction")
+            st.write("Upload prescriptions to instantly digitize and identify medications and symptoms.")
     with col2:
-        st.warning("**Safety Verification**\n\nCross-check prescribed medications against patient age, weight, and standard dosage rules.")
+        with st.container(border=True):
+            st.markdown("### 🛡️ Safety")
+            st.write("Automatically verify prescribed dosages against standard pediatric & adult guidelines.")
     with col3:
-        st.success("**AI Insights**\n\nPredict diseases, check complex drug interactions, and find cost-effective alternative medicines.")
-    
-    st.divider()
-    if st.session_state.shared_data['ner_results']:
-        st.subheader("Current Active Session Data")
-        st.json(st.session_state.shared_data['ner_results'])
-    else:
-        st.markdown("*(No active prescription data. Go to **OCR & Information Extraction** to begin.)*")
+        with st.container(border=True):
+            st.markdown("### 🤖 Intelligence")
+            st.write("Predict diseases, flag drug interactions, and discover cost-saving generic alternatives.")
 
-elif menu == "1. OCR & Information Extraction":
-    st.title("📄 1. Prescription Digitization & NER")
-    st.markdown("Upload a prescription image or enter text to extract medical entities.")
+elif menu == "1️⃣ OCR & Extraction":
+    st.title("📄 1. Prescription Digitization")
+    st.markdown("Upload a prescription image to automatically extract text and identify medical entities.")
     
-    col_input, col_output = st.columns([1, 1], gap="large")
+    col_in, col_out = st.columns([1, 1], gap="large")
     
-    with col_input:
-        st.subheader("Input Source")
-        tabs = st.tabs(["Upload Image", "Camera", "Manual Text"])
-        extracted_text = ""
-        
-        with tabs[0]:
-            img_file = st.file_uploader("Upload Prescription", type=["png", "jpg", "jpeg"])
-            if img_file and st.button("Extract Text from Image", use_container_width=True):
-                with st.spinner("Processing image via GCP Vision..."):
-                    try:
-                        res = api_post_ocr(img_file)
-                        extracted_text = res.get("extracted_text", "")
-                        st.session_state.shared_data['extracted_text'] = extracted_text
-                        st.success("Extraction Complete!")
-                    except Exception as e:
-                        st.error(f"OCR Error: {e}")
-                        
-        with tabs[1]:
-            cam_file = st.camera_input("Take a photo")
-            if cam_file and st.button("Extract Text from Camera", use_container_width=True):
-                with st.spinner("Processing image..."):
-                    try:
-                        res = api_post_ocr(cam_file)
-                        extracted_text = res.get("extracted_text", "")
-                        st.session_state.shared_data['extracted_text'] = extracted_text
-                        st.success("Extraction Complete!")
-                    except Exception as e:
-                        st.error(f"OCR Error: {e}")
-                        
-        with tabs[2]:
-            manual_text = st.text_area("Paste text manually:", value=st.session_state.shared_data['extracted_text'], height=150)
-            if st.button("Use Text", use_container_width=True):
-                extracted_text = manual_text
-                st.session_state.shared_data['extracted_text'] = extracted_text
-                
-        if st.session_state.shared_data['extracted_text']:
-            with st.expander("View Raw Text"):
-                st.write(st.session_state.shared_data['extracted_text'])
-
-    with col_output:
-        st.subheader("Extracted Medical Entities")
-        if st.session_state.shared_data['extracted_text']:
-            if st.button("Run AI Extraction (NER)", type="primary", use_container_width=True):
-                with st.spinner("Parsing medical entities..."):
-                    try:
-                        ner_res = api_post_ner(st.session_state.shared_data['extracted_text'])
-                        st.session_state.shared_data['ner_results'] = ner_res.get("entities", {})
-                    except Exception as e:
-                        st.error(f"NER Error: {e}")
+    with col_in:
+        with st.container(border=True):
+            st.markdown("#### 📥 Input Source")
+            tab1, tab2, tab3 = st.tabs(["Upload Image", "Camera", "Manual Text"])
             
-            entities = st.session_state.shared_data['ner_results']
-            if entities:
-                st.container(border=True)
-                c1, c2 = st.columns(2)
-                c1.metric("💊 Medications", ", ".join(entities.get("Medication", [])) or "None")
-                c2.metric("🤒 Symptoms", ", ".join(entities.get("Symptoms", [])) or "None")
-                c3, c4 = st.columns(2)
-                c3.metric("⚖️ Dosages", ", ".join(entities.get("Dosage", [])) or "None")
-                c4.metric("⏱️ Frequencies", ", ".join(entities.get("Frequency", [])) or "None")
-        else:
-            st.info("Provide text or an image on the left to begin.")
+            with tab1:
+                img_file = st.file_uploader("Upload Image", type=["png", "jpg", "jpeg"], key="upload_img")
+                if img_file and st.button("Extract Text", key="btn_extract_upload"):
+                    with st.spinner("Processing via GCP Vision..."):
+                        try:
+                            res = ocr_extract(img_file)
+                            st.session_state.app_data['extracted_text'] = res.get("extracted_text", "")
+                            st.success("Text extracted successfully!")
+                        except Exception as e: st.error(f"OCR Error: {e}")
+                            
+            with tab2:
+                cam_file = st.camera_input("Take a photo", key="cam_img")
+                if cam_file and st.button("Extract Text", key="btn_extract_cam"):
+                    with st.spinner("Processing..."):
+                        try:
+                            res = ocr_extract(cam_file)
+                            st.session_state.app_data['extracted_text'] = res.get("extracted_text", "")
+                            st.success("Text extracted successfully!")
+                        except Exception as e: st.error(f"OCR Error: {e}")
+                            
+            with tab3:
+                manual_txt = st.text_area("Paste text here:", value=st.session_state.app_data['extracted_text'], height=150, key="txt_manual")
+                if st.button("Save Text", key="btn_extract_manual"):
+                    st.session_state.app_data['extracted_text'] = manual_txt
+                    st.success("Text saved!")
 
-elif menu == "2. Disease Prediction":
-    st.title("🩺 2. AI Disease Prediction")
-    st.markdown("Predict potential diseases based on symptoms.")
-    
-    st.info("You can type symptoms below. Extracted symptoms from the prescription are pre-loaded.")
-    default_symps = ", ".join(get_ner_list("Symptoms"))
-    
-    symptoms_input = st.text_input("Enter symptoms (comma-separated):", value=default_symps)
-    
-    if st.button("Predict Disease", type="primary"):
-        symptom_list = [s.strip() for s in symptoms_input.split(",") if s.strip()]
-        if not symptom_list:
-            st.warning("Please enter at least one symptom.")
-        else:
-            with st.spinner("Analyzing symptoms..."):
-                try:
-                    res = api_post_predict(symptom_list)
-                    preds = res.get("predictions", [])
-                    st.session_state.shared_data['prediction_results'] = preds
+    with col_out:
+        with st.container(border=True):
+            st.markdown("#### 🧠 Extracted Entities")
+            if st.session_state.app_data['extracted_text']:
+                if st.button("Run AI Recognition", key="btn_run_ner"):
+                    with st.spinner("Identifying medical terms..."):
+                        try:
+                            ner_res = ner_parse(st.session_state.app_data['extracted_text'])
+                            st.session_state.app_data['ner_results'] = ner_res.get("entities", {})
+                        except Exception as e: st.error(f"NER Error: {e}")
+                
+                entities = st.session_state.app_data['ner_results']
+                if entities:
+                    st.markdown("**💊 Medications:**")
+                    meds = entities.get("Medication", [])
+                    st.markdown(" ".join([render_pill(m) for m in meds]) if meds else "*None*", unsafe_allow_html=True)
                     
-                    if preds:
-                        st.subheader("Top Predictions")
-                        cols = st.columns(len(preds))
-                        for idx, p in enumerate(preds):
-                            with cols[idx]:
-                                with st.container(border=True):
-                                    st.markdown(f"### {p['disease'].title().replace('_', ' ')}")
-                                    st.metric("Probability", p['probability'])
-                                    st.caption(f"Confidence: {p['confidence']}")
-                    else:
-                        st.warning("No strong predictions found for these symptoms.")
-                except Exception as e:
-                    st.error(f"Prediction Error: {e}")
+                    st.markdown("<br>**🤒 Symptoms:**", unsafe_allow_html=True)
+                    symps = entities.get("Symptoms", [])
+                    st.markdown(" ".join([render_pill(s) for s in symps]) if symps else "*None*", unsafe_allow_html=True)
+                    
+                    st.markdown("<br>**⚖️ Dosages:**", unsafe_allow_html=True)
+                    for d in entities.get("Dosage", []): st.markdown(f"- {d}")
+            else:
+                st.info("Upload an image on the left to begin.")
 
-elif menu == "3. Drug Interactions":
+elif menu == "2️⃣ Disease Prediction":
+    st.title("🩺 2. AI Disease Prediction")
+    st.markdown("Predict potential diseases based on patient symptoms.")
+    
+    ner_symps = st.session_state.app_data['ner_results'].get('Symptoms', [])
+    default_symps = ", ".join(ner_symps)
+    
+    with st.container(border=True):
+        symps_input = st.text_input("Symptoms (comma-separated):", value=default_symps, key="pred_input")
+        if st.button("Analyze Symptoms", key="btn_predict"):
+            symp_list = [s.strip() for s in symps_input.split(",") if s.strip()]
+            if not symp_list:
+                st.warning("Please enter at least one symptom.")
+            else:
+                with st.spinner("Analyzing..."):
+                    try:
+                        preds = predict_disease(symp_list).get("predictions", [])
+                        st.session_state.app_data['prediction_results'] = preds
+                        if preds:
+                            for p in preds:
+                                prob_float = float(p['probability'].strip('%')) / 100
+                                st.markdown(f"### {p['disease'].title().replace('_', ' ')}")
+                                c1, c2 = st.columns([0.8, 0.2])
+                                c1.progress(prob_float)
+                                c2.markdown(f"<h3 style='margin:0; color:#0f766e;'>{p['probability']}</h3>", unsafe_allow_html=True)
+                                st.write("---")
+                        else: st.info("No strong predictions found.")
+                    except Exception as e: st.error(f"Error: {e}")
+
+elif menu == "3️⃣ Drug Interactions":
     st.title("⚡ 3. Drug Interaction Check")
-    st.markdown("Use Google Gemini AI to analyze interactions between multiple medications.")
+    st.markdown("Check for adverse interactions between prescribed medications.")
     
-    meds = get_ner_list("Medication")
-    med_input = st.text_area("Medications to check (comma-separated):", value=", ".join(meds))
+    ner_meds = st.session_state.app_data['ner_results'].get('Medication', [])
+    meds_input = st.text_area("Medications (comma-separated):", value=", ".join(ner_meds), key="int_input")
     
-    if st.button("Check Interactions", type="primary"):
-        med_list = [m.strip() for m in med_input.split(",") if m.strip()]
+    if st.button("Analyze Interactions", key="btn_interactions"):
+        med_list = [m.strip() for m in meds_input.split(",") if m.strip()]
         if len(med_list) < 2:
-            st.warning("Please enter at least 2 medications to check interactions.")
+            st.warning("Please enter at least 2 medications.")
         else:
-            with st.spinner("AI is analyzing drug interactions..."):
+            with st.spinner("Checking pharmacological data..."):
                 try:
-                    res = api_post_interactions(med_list)
-                    st.session_state.shared_data['interaction_results'] = res
-                    with st.container(border=True):
-                        st.markdown(res)
-                except Exception as e:
-                    st.error(f"Interaction Error: {e}")
+                    res = get_interactions(med_list)
+                    st.session_state.app_data['interaction_results'] = res
+                    with st.container(border=True): st.markdown(res)
+                except Exception as e: st.error(f"Error: {e}")
 
-elif menu == "4. Verification & Dosage":
-    st.title("✅ 4. Drug Safety & Dosage Guidelines")
-    st.markdown(f"**Patient Context:** Age: {patient_age_yrs} yrs ({patient_age_months} months) | Weight: {patient_weight_kg} kg")
+elif menu == "4️⃣ Verification & Dosage":
+    st.title("✅ 4. Safety Verification")
     
-    tab1, tab2 = st.tabs(["Safety Verification", "Dosage Guidelines"])
+    age_months = st.session_state.patient_profile['age_years'] * 12
+    weight = st.session_state.patient_profile['weight_kg']
+    st.info(f"**Patient Profile:** {st.session_state.patient_profile['age_years']} Years Old | {weight} kg")
+    
+    ner = st.session_state.app_data['ner_results']
+    d_med = ner.get('Medication', [""])[0] if ner.get('Medication') else ""
+    d_symp = ner.get('Symptoms', [""])[0] if ner.get('Symptoms') else ""
+    d_dose = ner.get('Dosage', [""])[0] if ner.get('Dosage') else ""
+
+    tab1, tab2 = st.tabs(["Safety Check", "Guidelines Lookup"])
     
     with tab1:
-        st.subheader("Verify Prescription Safety")
-        col1, col2, col3 = st.columns(3)
-        with col1: v_med = st.text_input("Medication", value=get_ner_first("Medication"), key="v1")
-        with col2: v_symp = st.text_input("Symptom", value=get_ner_first("Symptoms"), key="v2")
-        with col3: 
-            v_dose_str = st.text_input("Prescribed Dose (e.g., '500 mg')", value=get_ner_first("Dosage"), key="v3")
-            
-        if st.button("Run Verification", type="primary"):
-            if not (v_med and v_symp and v_dose_str):
-                st.warning("Fill all fields.")
-            else:
-                try:
-                    # Extract raw number from dosage string
-                    match = re.search(r'(\d+\.?\d*)', v_dose_str)
-                    if not match: raise ValueError("No number found in dosage.")
-                    given_mg = float(match.group(1))
-                    dose_mg_kg = given_mg / patient_weight_kg
-                    
-                    with st.spinner("Cross-referencing datasets..."):
-                        report = api_get_verify(v_symp, v_med, patient_age_months, dose_mg_kg)
-                        st.session_state.shared_data['verify_results'] = report
-                        
-                        st.markdown(f"**Calculated Dose:** `{dose_mg_kg:.2f} mg/kg`")
-                        r_col1, r_col2, r_col3 = st.columns(3)
-                        r_col1.metric("Symptom Check", "✅ Pass" if "Pass" in report.get("symptom_check","") else "⚠️ Warn/Fail", help=report.get("symptom_check"))
-                        r_col2.metric("Age Check", "✅ Pass" if "Pass" in report.get("age_check","") else "⚠️ Warn/Fail", help=report.get("age_check"))
-                        r_col3.metric("Dosage Check", "✅ Pass" if "Pass" in report.get("dosage_check","") else "⚠️ Warn/Fail", help=report.get("dosage_check"))
-                        
-                        if report.get("notes"):
-                            st.info("**Notes:**\n" + "\n".join([f"- {n}" for n in report.get("notes")]))
-                except Exception as e:
-                    st.error(f"Error checking verification: {e}")
-                    
-    with tab2:
-        st.subheader("Lookup Standard Dosage")
-        d_med = st.text_input("Medication Name", value=get_ner_first("Medication"), key="d1")
-        if st.button("Fetch Guidelines"):
-            with st.spinner("Fetching..."):
-                try:
-                    res = api_get_dosage(d_med, patient_age_months)
-                    st.session_state.shared_data['dosage_results'] = res
-                    
-                    with st.container(border=True):
-                        st.markdown(f"### 💊 {res.get('drug_generic', d_med)}")
-                        c1, c2 = st.columns(2)
-                        c1.metric("Max Daily Dose", f"{res.get('max_daily_dose')} {res.get('max_daily_dose_units')}")
-                        c2.metric("Dosing Interval", f"Every {res.get('dosing_interval_hours')} hours")
-                        st.warning(f"**Safety Note:** {res.get('notes_key_safety', 'N/A')}")
-                except Exception as e:
-                    st.error(f"Error fetching dosage (check if medicine exists in dataset): {e}")
-
-elif menu == "5. Cost & Alternatives":
-    st.title("💸 5. Cost Savings & Home Remedies")
-    
-    a_med = st.text_input("Enter Medication Name to search for cheaper alternatives:", value=get_ner_first("Medication"))
-    
-    if st.button("Find Alternatives", type="primary"):
-        with st.spinner("Searching database..."):
-            try:
-                res = api_get_alternatives(a_med)
-                if not res:
-                    st.warning("No alternatives found in the database for this medicine.")
-                else:
-                    st.session_state.shared_data['alt_results'] = res
-                    base_price = res.get('price_in_inr', 0)
-                    
-                    st.markdown(f"### {a_med.title()} (Base Price: ₹{base_price})")
-                    st.caption(res.get('description', ''))
-                    
-                    col_alt, col_rem = st.columns(2)
-                    with col_alt:
-                        st.subheader("💊 Generic Alternatives")
-                        for alt in res.get('alternatives', []):
-                            with st.expander(f"**{alt['name']}** - ₹{alt['price_in_inr']}"):
-                                st.metric("Savings", f"{alt['savings_percentage']}%")
-                    
-                    with col_rem:
-                        st.subheader("🌿 Home Remedies")
-                        for cond, rem in res.get('home_remedies_for_common_uses', {}).items():
-                            st.markdown(f"- **{cond}**: {rem}")
-                            
-                    st.info(f"**Note:** {res.get('notes', '')}")
-            except Exception as e:
-                st.error(f"API Error: {e}")
-
-elif menu == "6. AI Final Summary":
-    st.title("🤖 6. AI Patient Summary")
-    st.markdown("Generates a comprehensive summary using all data processed in the previous steps.")
-    
-    st.write("Data ready for synthesis:")
-    flags = {
-        "NER Data": bool(st.session_state.shared_data['ner_results']),
-        "Verification Data": bool(st.session_state.shared_data['verify_results']),
-        "Interactions": bool(st.session_state.shared_data['interaction_results']),
-        "Alternatives": bool(st.session_state.shared_data['alt_results'])
-    }
-    
-    cols = st.columns(4)
-    for i, (k, v) in enumerate(flags.items()):
-        cols[i].metric(k, "Ready" if v else "Empty")
-        
-    if st.button("Generate Final Report", type="primary", use_container_width=True):
-        outputs_to_send = []
-        for k, v in st.session_state.shared_data.items():
-            if v and k != "extracted_text": # Send all JSON/structured data
-                outputs_to_send.append({k: v})
+        with st.container(border=True):
+            c1, c2, c3 = st.columns(3)
+            with c1: v_med = st.text_input("Medication", value=d_med, key="v_med")
+            with c2: v_symp = st.text_input("Symptom", value=d_symp, key="v_symp")
+            with c3: v_dose = st.text_input("Dose (e.g. '500 mg')", value=d_dose, key="v_dose")
                 
-        if not outputs_to_send:
-            st.error("No data available to summarize. Please run the other steps first.")
-        else:
-            with st.spinner("Gemini AI is crafting the summary..."):
-                try:
-                    summary = api_post_summary(outputs_to_send)
+            if st.button("Verify Safety", key="btn_verify"):
+                if not (v_med and v_symp and v_dose): st.warning("Fill all fields.")
+                else:
+                    try:
+                        match = re.search(r'(\d+\.?\d*)', v_dose)
+                        if not match: raise ValueError("No numeric dose found.")
+                        dose_mg_kg = float(match.group(1)) / weight
+                        
+                        with st.spinner("Verifying..."):
+                            report = verify_prescription(v_symp, v_med, age_months, dose_mg_kg)
+                            st.session_state.app_data['verify_results'] = report
+                            
+                            st.markdown(f"**Calculated Administered Dose:** `{dose_mg_kg:.2f} mg/kg`")
+                            r1, r2, r3 = st.columns(3)
+                            
+                            def fmt(val): return "✅ Safe" if "pass" in val.lower() else ("➖ N/A" if "not applicable" in val.lower() else "⚠️ Warning")
+                            
+                            r1.metric("Symptom Check", fmt(report.get("symptom_check", "")), help=report.get("symptom_check"))
+                            r2.metric("Age Check", fmt(report.get("age_check", "")), help=report.get("age_check"))
+                            r3.metric("Dosage Check", fmt(report.get("dosage_check", "")), help=report.get("dosage_check"))
+                            
+                            if report.get("notes"):
+                                st.markdown("#### Notes:")
+                                for n in report.get("notes", []): st.markdown(f"- {n}")
+                    except Exception as e: st.error(f"Error: {e}")
+
+    with tab2:
+        with st.container(border=True):
+            guideline_med = st.text_input("Search Medication", value=d_med, key="guide_med")
+            if st.button("Fetch Guidelines", key="btn_guide"):
+                with st.spinner("Fetching..."):
+                    try:
+                        res = get_dosage(guideline_med, age_months)
+                        st.markdown(f"### 💊 Guidelines for {res.get('drug_generic', guideline_med)}")
+                        g1, g2 = st.columns(2)
+                        g1.metric("Max Daily Dose", f"{res.get('max_daily_dose')} {res.get('max_daily_dose_units')}")
+                        g2.metric("Dosing Interval", f"Every {res.get('dosing_interval_hours')} hours")
+                        st.warning(f"**Safety Flag:** {res.get('notes_key_safety', 'None listed.')}")
+                    except Exception as e: st.error(f"Error: {e}")
+
+elif menu == "5️⃣ Cost & Alternatives":
+    st.title("💸 5. Alternatives & Cost Comparison")
+    
+    d_med = st.session_state.app_data['ner_results'].get('Medication', [""])[0] if st.session_state.app_data['ner_results'].get('Medication') else ""
+    alt_med = st.text_input("Medication Name", value=d_med, key="alt_med_input")
+    
+    if st.button("Search Database", key="btn_alt"):
+        with st.spinner("Searching..."):
+            try:
+                res = get_alternatives(alt_med)
+                if not res: st.warning("No data found.")
+                else:
+                    st.session_state.app_data['alt_results'] = res
                     with st.container(border=True):
+                        st.markdown(f"## {alt_med.title()}")
+                        st.caption(res.get('description', ''))
+                        st.metric("Base Price", f"₹{res.get('price_in_inr', 0)}")
+                        st.write("---")
+                        
+                        ca, cb = st.columns(2)
+                        with ca:
+                            st.markdown("#### 💊 Cheaper Alternatives")
+                            for alt in res.get('alternatives', []):
+                                with st.expander(f"**{alt['name']}**"):
+                                    c1, c2 = st.columns(2)
+                                    c1.metric("Price", f"₹{alt['price_in_inr']}")
+                                    c2.metric("Savings", f"{alt['savings_percentage']}%")
+                        with cb:
+                            st.markdown("#### 🌿 Home Remedies")
+                            for cond, rem in res.get('home_remedies_for_common_uses', {}).items():
+                                st.markdown(f"- **{cond}:** {rem}")
+            except Exception as e: st.error(f"Error: {e}")
+
+elif menu == "6️⃣ AI Final Summary":
+    st.title("🤖 6. AI Patient Summary")
+    st.markdown("Synthesize all gathered data into a single clinical report.")
+    
+    with st.container(border=True):
+        st.markdown("#### Data Collection Status")
+        flags = {
+            "OCR/NER": bool(st.session_state.app_data['ner_results']),
+            "Verification": bool(st.session_state.app_data['verify_results']),
+            "Interactions": bool(st.session_state.app_data['interaction_results']),
+            "Alternatives": bool(st.session_state.app_data['alt_results'])
+        }
+        
+        cols = st.columns(4)
+        for i, (k, v) in enumerate(flags.items()):
+            # Fixed: Standard if/else prevents Streamlit 'Magic' from printing raw objects
+            if v:
+                cols[i].success(f"✅ {k}")
+            else:
+                cols[i].error(f"❌ {k}")
+                
+        if st.button("Generate AI Report", key="btn_summary"):
+            outputs = [{k: v} for k, v in st.session_state.app_data.items() if v and k != "extracted_text"]
+            if not outputs: 
+                st.warning("No data available.")
+            else:
+                with st.spinner("Crafting summary..."):
+                    try:
+                        summary = generate_summary(outputs)
+                        st.write("---")
+                        st.markdown("### 📋 Final Analysis Report")
                         st.markdown(summary)
-                except Exception as e:
-                    st.error(f"Summarizer Error: {e}")
+                    except Exception as e: 
+                        st.error(f"Error: {e}")
