@@ -1,4 +1,4 @@
-from datasets.alt_dataset import get_dataset_alt
+from backend.datasets.alt_dataset import get_dataset_alt
 ALTERNATIVE_KNOWLEDGE_BASE = get_dataset_alt()
 
 
