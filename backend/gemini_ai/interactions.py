@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Any, List
-from watson_ai import ai_config
+from gemini_ai import ai_config
 from fastapi import HTTPException
 import logging
 

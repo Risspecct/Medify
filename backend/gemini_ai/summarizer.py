@@ -1,7 +1,7 @@
 import time
 from typing import Any
 from pydantic import BaseModel
-from watson_ai import ai_config
+from gemini_ai import ai_config
 from fastapi import HTTPException
 from logger_config import setup_logger
 
