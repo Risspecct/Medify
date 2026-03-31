@@ -2,10 +2,6 @@ import pickle
 import numpy as np
 import os
 import pandas as pd
-import warnings
-from sklearn.exceptions import InconsistentVersionWarning
-
-warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
 
 # Load the assets once when the server starts
 model_path = os.path.join(os.path.dirname(__file__), '..', 'model', 'disease_model.pkl')
