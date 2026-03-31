@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from routers.drug_info import router as drug_info_router
 from routers.ai_router import router as ai_router
@@ -6,6 +8,7 @@ from routers.ner_router import router as ner_router
 from routers.alt_router import router as alt_router
 import uvicorn
 import logging
+from data_processors.prescription import dosage_file_path
 
 logging.basicConfig(
     level=logging.INFO,
@@ -34,6 +37,16 @@ async def startup_event():
 @app.get("/")
 def home():
     return {"Message": "Welcome to Medify. Use /docs for API documentation."}
+
+
+@app.get("/debug-path")
+def debug_path():
+    return {
+        "configured_path": dosage_file_path,
+        "absolute_path": os.path.abspath(dosage_file_path),
+        "exists": os.path.exists(dosage_file_path),
+        "current_working_dir": os.getcwd()
+    }
 
 
 if __name__ == "__main__":

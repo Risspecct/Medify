@@ -1,3 +1,4 @@
+from pathlib import Path
 import pandas as pd
 import re
 from typing import Dict, Any
@@ -9,7 +10,7 @@ logger = setup_logger("Safety_Engine")
 
 load_dotenv()
 
-dosage_file_path = os.getenv("DOSAGE_FILE_PATH", "datasets/dosage.csv")
+dosage_file_path = os.getenv("DOSAGE_FILE_PATH", str(Path(__file__).resolve().parent.parent / "datasets" / "dosage.csv"))
 
 
 def _check_symptom(df: pd.DataFrame, symptom: str, medicine_name: str, report: Dict[str, Any]) -> None:

@@ -1,10 +1,12 @@
-from dotenv import load_dotenv
 import os
+
+from dotenv import load_dotenv
+from pathlib import Path
 import pandas as pd
 
 load_dotenv()
 
-dosage_file_path = os.getenv("DOSAGE_FILE_PATH", "datasets/dosage.csv")
+dosage_file_path = os.getenv("DOSAGE_FILE_PATH", str(Path(__file__).resolve().parent.parent / "datasets" / "dosage.csv"))
 
 
 def load_dosage_data(filepath: str = dosage_file_path) -> pd.DataFrame | str:
