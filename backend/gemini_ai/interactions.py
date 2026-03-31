@@ -6,8 +6,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class InteractionRequest(BaseModel):
     medicines: List[str]
+
 
 def get_interaction_results(request: InteractionRequest) -> Any:
     """
@@ -32,7 +34,7 @@ def get_interaction_results(request: InteractionRequest) -> Any:
     """
     try:
         return ai_config.gemini_model.generate_text(prompt)
-    except Exception as e:
+    except Exception:
         # Log full traceback server-side for diagnostics, but return a generic message to clients
         logger.exception("AI service error in get_interaction_results")
         raise HTTPException(status_code=502, detail="AI service error; check server logs for details.")
