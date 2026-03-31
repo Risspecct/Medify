@@ -3,6 +3,7 @@ from routers.drug_info import router as drug_info_router
 from routers.ai_router import router as ai_router
 from routers.ocr_router import router as ocr_router
 from routers.ner_router import router as ner_router
+from routers.alt_router import router as alt_router
 import uvicorn
 import logging
 
@@ -22,6 +23,7 @@ app.include_router(drug_info_router, prefix="/drug_info", tags=["Drug Informatio
 app.include_router(ai_router, prefix="/ai", tags=["AI Services"])
 app.include_router(ocr_router, prefix="/ocr", tags=["OCR Services"])
 app.include_router(ner_router, prefix="/ner", tags=["NER Services"])
+app.include_router(alt_router, prefix="/alternatives", tags=["Alternative Medications"])
 
 
 @app.on_event("startup")
