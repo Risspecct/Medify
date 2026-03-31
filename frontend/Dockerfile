@@ -1,21 +1,24 @@
+# Use a lightweight Python base image
 FROM python:3.11-slim
 
-WORKDIR /app
+# Prevent Python from writing .pyc files & keep stdout unbuffered
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential gcc curl \
-    && rm -rf /var/lib/apt/lists/*
+# Set the working directory directly to the frontend folder
+WORKDIR /app/frontend
 
-# Install frontend-specific dependencies
+# Copy requirements first to leverage Docker layer caching
 COPY frontend/requirements.txt .
+
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the Streamlit app and the shared datasets folder
-COPY frontend ./frontend
-COPY datasets ./datasets 
+# Copy frontend source code
+COPY frontend/ .
 
+# Expose Streamlit's default port
 EXPOSE 8501
 
-# Launch the Streamlit application
-CMD ["streamlit", "run", "frontend/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Run the Streamlit application
+CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]

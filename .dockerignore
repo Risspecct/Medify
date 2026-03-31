@@ -1,57 +1,45 @@
-# --- Python & Dependencies ---
+# --- Virtual Environments ---
+venv/
+.venv/
+env/
+**/site-packages/
+
+# --- Python Cache ---
 **/__pycache__/
 **/*.pyc
 **/*.pyo
 **/*.pyd
-**/.pytest_cache/
-**/.ipynb_checkpoints/
-venv/
-.venv/
-env/
-# Ignore local installed packages
-**/site-packages/
+.pytest_cache/
 
 # --- Environment & Secrets ---
 # Crucial: Never include actual secrets in your image
 .env
 .env.local
-.env.*
-!.env.example
-# Google Cloud Service Account Keys
 **/*.json
-!datasets/*.json # Only if you have non-secret JSON in datasets
+!datasets/*.json
 
 # --- Git & Version Control ---
 .git/
 .gitignore
 .dockerignore
-.gitattributes
 
-# --- Project Metadata & IDEs ---
+# --- IDEs & OS Files ---
 .vscode/
 .idea/
-*.swp
-*.swo
 .DS_Store
 Thumbs.db
-
-# --- Docker & CI/CD ---
-docker-compose.yml
-render.yaml
-Dockerfile
-**/Dockerfile
+*.swp
 
 # --- Build & Temporary Artifacts ---
 build/
 dist/
 *.egg-info/
 *.log
-*.out
-*.err
 tmp/
 temp/
 
-# Application Logs
+# Let the required code through, ignore local app logs
 backend/logs/
 backend/medify_debug.log
-*.log
+
+Disease_Prediction.ipynb
