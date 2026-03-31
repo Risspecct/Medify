@@ -19,7 +19,7 @@ st.set_page_config(
 )
 
 # -----------------------------------------------------------------------------
-# 2. THEME-ADAPTIVE VIBRANT CSS STYLING
+# 2. THEME-ADAPTIVE VIBRANT CSS STYLING & GLOBAL TEST CASES
 # -----------------------------------------------------------------------------
 st.markdown("""
     <style>
@@ -35,7 +35,7 @@ st.markdown("""
     header {visibility: hidden;}
     footer {visibility: hidden;}
 
-    /* Vibrant Gradient Headers (Works on Dark & Light Mode) */
+    /* Vibrant Gradient Headers */
     .gradient-text {
         background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
         -webkit-background-clip: text;
@@ -68,7 +68,7 @@ st.markdown("""
         box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5) !important;
     }
 
-    /* Output Containers / Cards - NO BACKGROUND COLOR (Let Streamlit handle it) */
+    /* Output Containers / Cards */
     [data-testid="stVerticalBlock"] > [style*="flex-direction: column;"] > [data-testid="stVerticalBlock"] {
         border-radius: 16px;
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -78,7 +78,7 @@ st.markdown("""
         box-shadow: 0 8px 24px rgba(149, 157, 165, 0.15);
     }
 
-    /* Metric Styling (Vibrant Purple for both modes) */
+    /* Metric Styling */
     [data-testid="stMetricValue"] {
         font-size: 2.2rem !important;
         font-weight: 800 !important;
@@ -89,7 +89,7 @@ st.markdown("""
         font-weight: 700 !important;
     }
 
-    /* Dynamic Colorful Pill Tags (Transparent backgrounds for dark mode compatibility) */
+    /* Dynamic Colorful Pill Tags */
     .pill {
         display: inline-block;
         padding: 6px 16px;
@@ -104,7 +104,6 @@ st.markdown("""
     .pill-dosage { background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3); }
     .pill-freq { background: rgba(14, 165, 233, 0.15); color: #38bdf8; border-color: rgba(14, 165, 233, 0.3); }
 
-    /* Light mode text colors for pills (using media query) */
     @media (prefers-color-scheme: light) {
         .pill-medication { color: #7c3aed; }
         .pill-symptom { color: #e11d48; }
@@ -114,9 +113,29 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-
 def render_pill(text, category="medication"):
     return f'<span class="pill pill-{category}">{text}</span>'
+
+
+# --- PREDEFINED TEST CASES ---
+TEST_CASES_DP = {
+    "Viral Fever / Flu": "fever, cough, fatigue, chills, ache all over",
+    "Cardiovascular Risk": "sharp chest pain, shortness of breath, palpitations, sweating",
+    "Food Poisoning / GI": "nausea, vomiting, diarrhea, upper abdominal pain",
+    "Migraine / Neuro": "headache, dizziness, nausea, spots or clouds in vision",
+    "Diabetic Profile": "polyuria, thirst, recent weight loss, fatigue",
+    "Hepatic / Liver Issue": "jaundice, upper abdominal pain, nausea, fatigue"
+}
+
+TEST_CASES_DI = {
+    "Serotonin Syndrome (High Risk)": "Sertraline, Tramadol",
+    "Bleeding Risk (High Risk)": "Clopidogrel, Ibuprofen",
+    "QT Prolongation (High Risk)": "Domperidone, Ondansetron",
+    "Reduced Efficacy (Moderate Risk)": "Clopidogrel, Pantoprazole",
+    "Kidney Strain (Moderate Risk)": "Metformin, Ibuprofen",
+    "Safe Combination (Low Risk)": "Paracetamol, Amoxicillin"
+}
+
 
 # -----------------------------------------------------------------------------
 # 3. API CLIENT FUNCTIONS
@@ -176,7 +195,13 @@ if 'app_data' not in st.session_state:
 if 'patient_profile' not in st.session_state:
     st.session_state.patient_profile = {'age_years': 5, 'weight_kg': 20.0}
 
-# Helper function to load demo scenarios
+# Text inputs states to persist user selection across pages
+if 'dp_text_input' not in st.session_state:
+    st.session_state.dp_text_input = ""
+if 'di_text_input' not in st.session_state:
+    st.session_state.di_text_input = ""
+
+# Helper function to load demo scenarios (Prescriptions)
 def load_scenario(text, age, weight):
     with st.spinner("🚀 Running AI Extraction Engine..."):
         st.session_state.patient_profile['age_years'] = age
@@ -185,7 +210,7 @@ def load_scenario(text, age, weight):
         try:
             ner_res = ner_parse(text)
             st.session_state.app_data['ner_results'] = ner_res.get("entities", {})
-            time.sleep(1) # Just to let the user see the spinner
+            time.sleep(1) 
         except Exception as e:
             st.error(f"Failed to load demo: {e}")
 
@@ -247,37 +272,68 @@ if menu == "🏠 Dashboard Overview":
     st.write("---")
     
     # Interactive Demos Section
-    st.markdown("### ⚡ Try a Live Scenario")
-    st.markdown("Click a scenario below to instantly load mock patient data and extract the medical entities using our AI.")
+    st.markdown("### ⚡ Interactive Test Cases")
+    st.markdown("Click a scenario below to instantly load mock patient data and test different modules of Medify.")
     
-    d1, d2, d3 = st.columns(3)
-    
-    with d1:
-        with st.container(border=True):
-            st.markdown("#### 👶 Pediatric Fever")
-            st.caption("Patient: 5 Yrs, 20kg")
-            st.markdown("<p style='opacity:0.7; font-style:italic;'>\"Rx: Paracetamol 250mg, 5ml twice a day. Advised for fever and body ache.\"</p>", unsafe_allow_html=True)
-            if st.button("Test This Scenario", key="demo_ped"):
-                load_scenario("Rx: Paracetamol 250mg, 5ml twice a day. Advised for fever and body ache.", 5, 20.0)
-                st.success("Loaded! Check 'Extracted Data' below or go to Step 4.")
-                
-    with d2:
-        with st.container(border=True):
-            st.markdown("#### 👴 Adult Chronic")
-            st.caption("Patient: 60 Yrs, 75kg")
-            st.markdown("<p style='opacity:0.7; font-style:italic;'>\"Metformin 500mg daily. Amlodipine 5mg once a day. For diabetes and high blood pressure.\"</p>", unsafe_allow_html=True)
-            if st.button("Test This Scenario", key="demo_adult"):
-                load_scenario("Metformin 500mg daily. Amlodipine 5mg once a day. For diabetes and high blood pressure.", 60, 75.0)
-                st.success("Loaded! Go to Step 3 to check drug interactions.")
+    tab_rx, tab_dp, tab_di = st.tabs(["📝 Full Prescriptions", "🩺 Disease Prediction", "⚡ Drug Interactions"])
 
-    with d3:
-        with st.container(border=True):
-            st.markdown("#### 🤒 Severe Infection")
-            st.caption("Patient: 30 Yrs, 65kg")
-            st.markdown("<p style='opacity:0.7; font-style:italic;'>\"Azithromycin 500mg stat. Cetirizine 10mg at bedtime. For severe cold and cough.\"</p>", unsafe_allow_html=True)
-            if st.button("Test This Scenario", key="demo_inf"):
-                load_scenario("Azithromycin 500mg stat. Cetirizine 10mg at bedtime. For severe cold and cough.", 30, 65.0)
-                st.success("Loaded! Go to Step 2 to predict the exact disease.")
+    # TAB 1: FULL PRESCRIPTION SCENARIOS
+    with tab_rx:
+        d1, d2, d3 = st.columns(3)
+        with d1:
+            with st.container(border=True):
+                st.markdown("#### 👶 Pediatric Fever")
+                st.caption("Patient: 5 Yrs, 20kg")
+                st.markdown("<p style='opacity:0.7; font-style:italic;'>\"Rx: Paracetamol 250mg, 5ml twice a day. Advised for fever and body ache.\"</p>", unsafe_allow_html=True)
+                if st.button("Test This Scenario", key="demo_ped"):
+                    load_scenario("Rx: Paracetamol 250mg, 5ml twice a day. Advised for fever and body ache.", 5, 20.0)
+                    st.success("Loaded! Check 'Extracted Data' below or go to Step 4.")
+                    
+        with d2:
+            with st.container(border=True):
+                st.markdown("#### 👴 Adult Chronic")
+                st.caption("Patient: 60 Yrs, 75kg")
+                st.markdown("<p style='opacity:0.7; font-style:italic;'>\"Metformin 500mg daily. Amlodipine 5mg once a day. For diabetes and high blood pressure.\"</p>", unsafe_allow_html=True)
+                if st.button("Test This Scenario", key="demo_adult"):
+                    load_scenario("Metformin 500mg daily. Amlodipine 5mg once a day. For diabetes and high blood pressure.", 60, 75.0)
+                    st.success("Loaded! Go to Step 3 to check drug interactions.")
+
+        with d3:
+            with st.container(border=True):
+                st.markdown("#### 🤒 Severe Infection")
+                st.caption("Patient: 30 Yrs, 65kg")
+                st.markdown("<p style='opacity:0.7; font-style:italic;'>\"Azithromycin 500mg stat. Cetirizine 10mg at bedtime. For severe cold and cough.\"</p>", unsafe_allow_html=True)
+                if st.button("Test This Scenario", key="demo_inf"):
+                    load_scenario("Azithromycin 500mg stat. Cetirizine 10mg at bedtime. For severe cold and cough.", 30, 65.0)
+                    st.success("Loaded! Go to Step 2 to predict the exact disease.")
+
+    # TAB 2: DISEASE PREDICTION TESTS
+    with tab_dp:
+        cols = st.columns(3)
+        for i, (name, symps) in enumerate(TEST_CASES_DP.items()):
+            with cols[i%3].container(border=True):
+                st.markdown(f"#### {name}")
+                st.caption(f"**Symptoms:** {symps}")
+                if st.button(f"Load '{name}'", key=f"dash_dp_{i}"):
+                    st.session_state.dp_text_input = symps
+                    if 'Symptoms' not in st.session_state.app_data['ner_results']:
+                        st.session_state.app_data['ner_results']['Symptoms'] = []
+                    st.session_state.app_data['ner_results']['Symptoms'] = [s.strip() for s in symps.split(",")]
+                    st.success(f"Symptoms Loaded! Navigate to '2️⃣ Disease Prediction' on the left.")
+
+    # TAB 3: DRUG INTERACTION TESTS
+    with tab_di:
+        cols = st.columns(3)
+        for i, (name, meds) in enumerate(TEST_CASES_DI.items()):
+            with cols[i%3].container(border=True):
+                st.markdown(f"#### {name}")
+                st.caption(f"**Medications:** {meds}")
+                if st.button(f"Load '{name}'", key=f"dash_di_{i}"):
+                    st.session_state.di_text_input = meds
+                    if 'Medication' not in st.session_state.app_data['ner_results']:
+                        st.session_state.app_data['ner_results']['Medication'] = []
+                    st.session_state.app_data['ner_results']['Medication'] = [m.strip() for m in meds.split(",")]
+                    st.success(f"Medications Loaded! Navigate to '3️⃣ Drug Interactions' on the left.")
 
     # Show active data if exists
     if st.session_state.app_data.get('ner_results'):
@@ -364,13 +420,28 @@ elif menu == "2️⃣ Disease Prediction":
     st.markdown("<h1 class='gradient-text'>🩺 Disease Predictor</h1>", unsafe_allow_html=True)
     st.markdown("Powered by Machine Learning to predict potential diseases based on patient symptoms.")
     
+    # Sync NER symptoms if empty
     ner_symps = st.session_state.app_data['ner_results'].get('Symptoms', [])
     default_symps = ", ".join(ner_symps)
+    if not st.session_state.dp_text_input and default_symps:
+        st.session_state.dp_text_input = default_symps
     
+    # Quick Test Cases Section
+    st.markdown("### 🧪 Quick Test Cases")
+    with st.expander("Load a predefined symptom profile"):
+        cols = st.columns(3)
+        for i, (name, symps) in enumerate(TEST_CASES_DP.items()):
+            if cols[i%3].button(name, key=f"btn_dp_tc_{i}", use_container_width=True):
+                st.session_state.dp_text_input = symps
+                st.rerun()
+
     with st.container(border=True):
-        symps_input = st.text_input("Symptoms (comma-separated):", value=default_symps, key="pred_input")
+        symps_input = st.text_input("Symptoms (comma-separated):", value=st.session_state.dp_text_input, key="pred_input_widget")
+        
         if st.button("Analyze Symptoms", key="btn_predict"):
+            st.session_state.dp_text_input = symps_input # save back to state
             symp_list = [s.strip() for s in symps_input.split(",") if s.strip()]
+            
             if not symp_list:
                 st.warning("Please enter at least one symptom.")
             else:
@@ -394,11 +465,27 @@ elif menu == "3️⃣ Drug Interactions":
     st.markdown("<h1 class='gradient-text'>⚡ Interaction Checker</h1>", unsafe_allow_html=True)
     st.markdown("Check for adverse interactions between prescribed medications using Generative AI.")
     
+    # Sync NER medications if empty
     ner_meds = st.session_state.app_data['ner_results'].get('Medication', [])
-    meds_input = st.text_area("Medications (comma-separated):", value=", ".join(ner_meds), key="int_input")
+    default_meds = ", ".join(ner_meds)
+    if not st.session_state.di_text_input and default_meds:
+        st.session_state.di_text_input = default_meds
+
+    # Quick Test Cases Section
+    st.markdown("### 🧪 Quick Test Cases")
+    with st.expander("Load a predefined medication combination"):
+        cols = st.columns(3)
+        for i, (name, meds) in enumerate(TEST_CASES_DI.items()):
+            if cols[i%3].button(name, key=f"btn_di_tc_{i}", use_container_width=True):
+                st.session_state.di_text_input = meds
+                st.rerun()
+
+    meds_input = st.text_area("Medications (comma-separated):", value=st.session_state.di_text_input, key="int_input_widget")
     
     if st.button("Analyze Interactions", key="btn_interactions"):
+        st.session_state.di_text_input = meds_input # save back to state
         med_list = [m.strip() for m in meds_input.split(",") if m.strip()]
+        
         if len(med_list) < 2:
             st.warning("Please enter at least 2 medications.")
         else:
