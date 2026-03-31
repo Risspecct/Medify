@@ -3,3 +3,5 @@ pandas
 python-dotenv
 google-generativeai
 uvicorn
+numpy
+scikit-learn==1.6.1
