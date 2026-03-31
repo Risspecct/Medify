@@ -1,7 +1,12 @@
 fastapi[standard]
-pandas
-python-dotenv
-google-generativeai
+python-multipart
 uvicorn
+pandas
 numpy
 scikit-learn==1.6.1
+python-dotenv
+google-generativeai
+google-cloud-vision
+transformers
+torch
+sentencepiece
