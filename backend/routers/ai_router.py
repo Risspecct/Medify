@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from watson_ai import summarizer, interactions
+from gemini_ai import summarizer, interactions
 
 router = APIRouter()
 

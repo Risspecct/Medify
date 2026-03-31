@@ -21,7 +21,7 @@ app = FastAPI()
 app.include_router(drug_info_router, prefix="/drug_info", tags=["Drug Information"])
 app.include_router(ai_router, prefix="/ai", tags=["AI Services"])
 app.include_router(ocr_router, prefix="/ocr", tags=["OCR Services"])
-
+app.include_router(ner_router, prefix="/ner", tags=["NER Services"])
 
 
 @app.on_event("startup")
