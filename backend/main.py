@@ -41,15 +41,5 @@ def home():
     return {"Message": "Welcome to Medify. Use /docs for API documentation."}
 
 
-@app.get("/debug-path")
-def debug_path():
-    return {
-        "configured_path": dosage_file_path,
-        "absolute_path": os.path.abspath(dosage_file_path),
-        "exists": os.path.exists(dosage_file_path),
-        "current_working_dir": os.getcwd()
-    }
-
-
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
